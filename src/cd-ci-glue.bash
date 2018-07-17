@@ -34,6 +34,20 @@ is_travis_master_push() {
     is_travis_branch_push master
 }
 
+#
+# Argument $1 = image name e.g. madworx/debian-archive:lenny
+#
+dockerhub_push_image() {
+    if [[ -v DOCKER_USERNAME ]] && [[ -v DOCKER_PASSWORD ]] ; then
+        echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin && \
+            docker push $1
+    else
+        echo "FATAL: Docker hub username/password environment variables " 1>&2
+        echo "       DOCKER_USERNAME and/or DOCKER_PASSWORD not set. Aborting." 1>&2
+        echo "" 1>&2
+        exit 1
+    fi
+}
 
 #
 # Argument: $1 = repository name. e.g. madworx/docshell
