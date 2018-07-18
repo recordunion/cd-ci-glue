@@ -91,7 +91,10 @@ dockerhub_set_description() {
 }
 
 #
-# Argument: $1 = repository name. e.g. madworx/docshell
+# Argument: $1 = repository name. e.g. madworx/docshell.
+#
+# Outputs the temporary directory name you're supposed to put the Wiki
+# files into.
 #
 github_wiki_prepare() {
     if [[ ! -v GH_TOKEN ]] ; then
@@ -117,11 +120,14 @@ github_wiki_prepare() {
 }
 
 #
+# Argument:   $1  =   temporary  directory   from  previous   call  to
+#                     github_wiki_prepare.
 #
+# Commit previously prepared wiki directory.
 #
 github_wiki_commit() {
-    cd "${TMPDR}"
+    cd "$1"
     git add -A .
-    git commit -m 'Automated Wiki update' Compatibility-matrix.md Home.md || return 0
+    git commit -m 'Automated Wiki update' -a || return 0
     git push
 }
