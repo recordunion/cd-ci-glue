@@ -114,8 +114,10 @@ github_wiki_prepare() {
     TMPDR="$(mktemp -d)"
     git config --global user.email "travis@travis-ci.org"
     git config --global user.name  "Travis CI"
-    git clone "https://${GH_TOKEN}@github.com/${1}.wiki.git" "${TMPDR}"
-    git rm -r . || true
+    git clone "https://${GH_TOKEN}@github.com/${1}.wiki.git" "${TMPDR}" >/dev/null 2>&1
+    pushd "${TMPDR}" >/dev/null || exit 1
+    git rm -r . >/dev/null 2>&1 || true
+    popd >/dev/null
     echo "${TMPDR}"
 }
 
