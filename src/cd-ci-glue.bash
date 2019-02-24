@@ -110,7 +110,7 @@ _github_doc_prepare() {
     fi
     
     TMPDR="$(mktemp -d)"
-    git config --global user.email "travis@travis-ci.org"
+    git config --global user.email "support@travis-ci.org"
     git config --global user.name  "Travis CI"
     git clone "$1" "${TMPDR}" >/dev/null 2>&1 || exit 1
     if [ ! -z "$2" ] ; then
@@ -128,7 +128,7 @@ _github_doc_prepare() {
 # files into.
 #
 github_wiki_prepare() {
-    TMPDIR=$(_github_doc_prepare "https://${GH_TOKEN}@github.com/${1}.wiki.git") || exit 1
+    TMPDR=$(_github_doc_prepare "https://${GH_TOKEN}@github.com/${1}.wiki.git") || exit 1
     pushd "${TMPDR}" >/dev/null || exit 1
     git rm -r . >/dev/null 2>&1 || true
     popd >/dev/null
