@@ -75,6 +75,7 @@ dockerhub_set_description() {
                      'https://hub.docker.com/v2/users/login/' | jq -r '.token')
 
         echo "Setting Docker hub description of image $1 ...."
+        # shellcheck disable=SC1117
         perl -ne "BEGIN{ print '{\"full_description\":\"';} END{ print '\"}' } s#\n#\\\n#msg;s#\"#\\\\\"#msg;print;" "$2" | \
         curl -s \
              -H "Content-Type: application/json" \
@@ -110,13 +111,13 @@ _github_doc_prepare() {
     fi
     
     TMPDR="$(mktemp -d)"
-    git config --global user.email "support@travis-ci.org"
-    git config --global user.name  "Travis CI"
     git clone "$1" "${TMPDR}" >/dev/null 2>&1 || exit 1
     if [ ! -z "$2" ] ; then
         pushd "${TMPDR}" >/dev/null || exit 1
         git checkout "$2" >/dev/null 2>&1 || exit 1
-        popd >/dev/null
+        git config --local user.email "support@travis-ci.org"
+        git config --local user.name  "Travis CI"
+        popd >/dev/null || exit 1
     fi
     echo "${TMPDR}"
 }
@@ -131,7 +132,7 @@ github_wiki_prepare() {
     TMPDR=$(_github_doc_prepare "https://${GH_TOKEN}@github.com/${1}.wiki.git") || exit 1
     pushd "${TMPDR}" >/dev/null || exit 1
     git rm -r . >/dev/null 2>&1 || true
-    popd >/dev/null
+    popd >/dev/null || exit 1
     echo "${TMPDR}"
 }
 
