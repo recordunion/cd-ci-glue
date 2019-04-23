@@ -1,0 +1,16 @@
+# Doxyfile 1.8.13
+
+MARKDOWN_SUPPORT       = yes
+DOXYFILE_ENCODING      = UTF-8
+GENERATE_LATEX         = no
+GENERATE_HTML          = yes
+PROJECT_NAME           = "cd-ci-glue"
+OUTPUT_DIRECTORY       = docs/
+OUTPUT_LANGUAGE        = English
+INPUT                  = src README.md
+FILE_PATTERNS          = *.bash
+INPUT_FILTER           = "sed -n -f doxygen-bash.sed -- "
+FILTER_PATTERNS        = *.md=cat
+EXTENSION_MAPPING      = bash=C
+USE_MDFILE_AS_MAINPAGE = README.md
+

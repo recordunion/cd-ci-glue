@@ -2,5 +2,17 @@ language: minimal
 
 sudo: false
 
+addons:
+  apt:
+    packages:
+      - doxygen
+
 script:
   - make test
+  - make docs
+
+after_success:
+  - source <(curl 'https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash')
+  - GHDIR=$(github_pages_prepare 'madworx/cd-ci-glue') || exit 1
+  - cp -a docs/html/* "${GHDIR}/"
+  - is_travis_master_push && github_doc_commit "${GHDIR}"
