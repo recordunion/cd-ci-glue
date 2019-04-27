@@ -12,7 +12,7 @@ load ../src/cd-ci-glue
     [ "$status" -eq 0 ]
     
     GIT_REMOTEDIR="$(mktemp -d)"
-    ( cd "${GIT_REMOTEDIR}" && git init )
+    ( cd "${GIT_REMOTEDIR}" && git init > /dev/null )
 
     pushd "${GIT_CODIR}"
     git remote set-url origin "${GIT_REMOTEDIR}"
@@ -37,4 +37,16 @@ load ../src/cd-ci-glue
     #
     diff -uNr -x .git "${GIT_CODIR}" "${GIT_NEWCLONE}"
     rm -rf "${GIT_CODIR}" "${GIT_NEWCLONE}" "${GIT_REMOTEDIR}" || true
+}
+
+@test "Github prepare should set user details" {
+    run _github_doc_prepare "https://${GH_TOKEN}@github.com/madworx/cd-ci-glue" "gh-pages"
+    GIT_CODIR="${lines[@]}"
+    [ "$status" -eq 0 ]
+    ( cd "${GIT_CODIR}" && git config --local -l | egrep '^user[.](email|name)' | wc -l | xargs test 2 == )
+
+    run _github_doc_prepare "https://${GH_TOKEN}@github.com/madworx/cd-ci-glue"
+    GIT_CODIR="${lines[@]}"
+    [ "$status" -eq 0 ]
+    ( cd "${GIT_CODIR}" && git config --local -l | egrep '^user[.](email|name)' | wc -l | xargs test 2 == )
 }

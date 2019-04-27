@@ -150,14 +150,14 @@ _github_doc_prepare() {
     fi
     
     TMPDR="$(mktemp -d)"
-    git clone "$1" "${TMPDR}" >/dev/null 2>&1 || exit 1
+    git clone -q "$1" "${TMPDR}" || exit 1
+    pushd "${TMPDR}" >/dev/null || exit 1
+    git config --local user.email "support@travis-ci.org"
+    git config --local user.name  "Travis CI"
     if [ ! -z "$2" ] ; then
-        pushd "${TMPDR}" >/dev/null || exit 1
         git checkout "$2" >/dev/null 2>&1 || exit 1
-        git config --local user.email "support@travis-ci.org"
-        git config --local user.name  "Travis CI"
-        popd >/dev/null || exit 1
     fi
+    popd >/dev/null || exit 1
     echo "${TMPDR}"
 }
 
