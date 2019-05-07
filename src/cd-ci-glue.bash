@@ -93,6 +93,7 @@ dockerhub_push_image() {
 ## `$ dockerhub_set_description madworx/docshell README.md` @n
 ##
 dockerhub_set_description() {
+    : "${_DOCKERHUB_URL:=https://hub.docker.com/v2}"
     echo "Setting Docker hub description..."
     if [ -z "$1" ] ; then
         echo "FATAL: Missing argument 1 (repository name. e.g. madworx/docshell)" 1>&2
@@ -109,19 +110,26 @@ dockerhub_set_description() {
 
     if [[ -v DOCKER_USERNAME ]] && [[ -v DOCKER_PASSWORD ]] ; then
         echo "Logging onto Docker hub..."
-        TOKEN=$(curl -s -H "Content-Type: application/json" -X POST \
+        TOKEN=$(curl -f -s -H "Content-Type: application/json" -X POST \
                      -d '{"username": "'"${DOCKER_USERNAME}"'", "password": "'"${DOCKER_PASSWORD}"'"}' \
-                     'https://hub.docker.com/v2/users/login/' | jq -r '.token')
+                     "${_DOCKERHUB_URL}/users/login/" | jq -r '.token')
+
+        if [ -z "${TOKEN}" ] ; then
+            echo "FATAL: Unable to logon to Docker Hub using provided credentials" 1>&2
+            echo "       DOCKER_USERNAME and/or DOCKER_PASSWORD incorrectly set. Aborting." 1>&2
+            exit 1
+        fi
 
         echo "Setting Docker hub description of image $1 ...."
         # shellcheck disable=SC1117
         perl -ne "BEGIN{ print '{\"full_description\":\"';} END{ print '\"}' } s#\n#\\\n#msg;s#\"#\\\\\"#msg;print;" "$2" | \
-        curl -s \
+        curl -f \
+             -s \
              -H "Content-Type: application/json" \
              -H "Authorization: JWT ${TOKEN}" \
              -X PATCH \
              -d@/dev/stdin \
-             "https://hub.docker.com/v2/repositories/$1/"
+             "${_DOCKERHUB_URL}/repositories/$1/" >/dev/null
     else
         echo "FATAL: Docker hub username/password environment variables " 1>&2
         echo "       DOCKER_USERNAME and/or DOCKER_PASSWORD not set. Aborting." 1>&2
