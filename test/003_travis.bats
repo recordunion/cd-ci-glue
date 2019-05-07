@@ -4,10 +4,8 @@
 load ../src/cd-ci-glue
 
 @test "Travis CI operations should match" {
-    TRAVIS_BRANCH=master TRAVIS_EVENT_TYPE=push run is_travis_master_push
-    [ "$status" -eq 0 ]
-    TRAVIS_BRANCH=foobranch TRAVIS_EVENT_TYPE=push run is_travis_branch_push foobranch
-    [ "$status" -eq 0 ]
+    TRAVIS_BRANCH=master TRAVIS_EVENT_TYPE=push is_travis_master_push
+    TRAVIS_BRANCH=foobranch TRAVIS_EVENT_TYPE=push is_travis_branch_push foobranch
 }
 
 @test "Travis CI operations should be false" {

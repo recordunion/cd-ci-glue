@@ -110,9 +110,8 @@ dockerhub_set_description() {
 
     if [[ -v DOCKER_USERNAME ]] && [[ -v DOCKER_PASSWORD ]] ; then
         echo "Logging onto Docker hub..."
-        TOKEN=$(curl -f -s -H "Content-Type: application/json" -X POST \
-                     -d '{"username": "'"${DOCKER_USERNAME}"'", "password": "'"${DOCKER_PASSWORD}"'"}' \
-                     "${_DOCKERHUB_URL}/users/login/" | jq -r '.token')
+        PAYLOAD='{"username": "'"${DOCKER_USERNAME}"'", "password": "'"${DOCKER_PASSWORD}"'"}'
+        TOKEN=$(curl -f -s -H "Content-Type: application/json" -X POST -d "${PAYLOAD}" "${_DOCKERHUB_URL}/users/login/" | jq -r '.token')
 
         if [ -z "${TOKEN}" ] ; then
             echo "FATAL: Unable to logon to Docker Hub using provided credentials" 1>&2

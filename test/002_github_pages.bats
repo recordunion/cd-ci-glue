@@ -26,9 +26,7 @@ load ../src/cd-ci-glue
     #
     # cd-ci-glue invocation; github_pages_prepare
     #
-    run github_pages_prepare madworx/cd-ci-glue
-    GIT_CODIR="${lines[@]}"
-    [ "$status" -eq 0 ]
+    GIT_CODIR="$(github_pages_prepare madworx/cd-ci-glue)"
     
     GIT_REMOTEDIR="$(mktemp -d)"
     ( cd "${GIT_REMOTEDIR}" && git init > /dev/null )
@@ -45,8 +43,7 @@ load ../src/cd-ci-glue
     #
     # cd-ci-glue invocation; github_doc_commit
     #
-    run github_doc_commit "${GIT_CODIR}"
-    [ "$status" -eq 0 ]
+    github_doc_commit "${GIT_CODIR}"
     
     GIT_NEWCLONE="$(mktemp -d)"
     git clone --branch gh-pages "${GIT_REMOTEDIR}" "${GIT_NEWCLONE}"
@@ -59,13 +56,9 @@ load ../src/cd-ci-glue
 }
 
 @test "Github prepare should set user details" {
-    run _github_doc_prepare "madworx/cd-ci-glue" "gh-pages"
-    GIT_CODIR="${lines[@]}"
-    [ "$status" -eq 0 ]
+    GIT_CODIR="$(_github_doc_prepare "madworx/cd-ci-glue" "gh-pages")"
     ( cd "${GIT_CODIR}" && git config --local -l | egrep '^user[.](email|name)' | wc -l | xargs test 2 == )
 
-    run _github_doc_prepare "madworx/cd-ci-glue"
-    GIT_CODIR="${lines[@]}"
-    [ "$status" -eq 0 ]
+    GIT_CODIR="$(_github_doc_prepare "madworx/cd-ci-glue")"
     ( cd "${GIT_CODIR}" && git config --local -l | egrep '^user[.](email|name)' | wc -l | xargs test 2 == )
 }
