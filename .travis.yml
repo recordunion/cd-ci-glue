@@ -19,6 +19,7 @@ script:
 after_success:
   - source <(curl 'https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash')
   - GHDIR=$(github_pages_prepare 'madworx/cd-ci-glue') || exit 1
+  - ( pushd "${GHDIR}" && git rm -r . || true ; popd )
   - cp -a docs/html/*  "${GHDIR}/"
-  - cp -a src/coverage "${GHDIR}/coverage"
+  - cp -a src/coverage -t "${GHDIR}/"
   - is_travis_master_push && github_doc_commit "${GHDIR}"
