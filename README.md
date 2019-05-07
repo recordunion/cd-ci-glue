@@ -15,6 +15,8 @@ publishing of artifacts and documentation.
 
 Always-up-to-date generated documentation is available here: [cd-ci-glue.bash](https://madworx.github.io/cd-ci-glue/cd-ci-glue_8bash.html).
 
+Code-coverage of test cases is available here: [coverage/](https://madworx.github.io/cd-ci-glue/coverage/).
+
 ## Versioning
 
 The `master` branch is always in working state and represents the current state of the library and will always remain backwards-compatible.
