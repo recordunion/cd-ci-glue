@@ -148,9 +148,11 @@ _github_doc_prepare() {
         echo "" 1>&2
         exit 1
     fi
+
+    REPO="https://${GH_TOKEN}@github.com/$1"
     
     TMPDR="$(mktemp -d)"
-    git clone -q "$1" "${TMPDR}" || exit 1
+    git clone -q "${REPO}" "${TMPDR}" || exit 1
     pushd "${TMPDR}" >/dev/null || exit 1
     git config --local user.email "support@travis-ci.org"
     git config --local user.name  "Travis CI"
@@ -170,7 +172,7 @@ _github_doc_prepare() {
 ## files into.
 ##
 github_wiki_prepare() {
-    TMPDR=$(_github_doc_prepare "https://${GH_TOKEN}@github.com/${1}.wiki.git") || exit 1
+    TMPDR=$(_github_doc_prepare "${1}.wiki.git") || exit 1
     pushd "${TMPDR}" >/dev/null || exit 1
     git rm -r . >/dev/null 2>&1 || true
     popd >/dev/null || exit 1
@@ -185,7 +187,7 @@ github_wiki_prepare() {
 ## @details Outputs the temporary directory of the gh-pages branch.
 ##
 github_pages_prepare() {
-    _github_doc_prepare "https://${GH_TOKEN}@github.com/${1}" "gh-pages" || exit 1
+    _github_doc_prepare "${1}" "gh-pages" || exit 1
 }
 
 ##
@@ -197,8 +199,14 @@ github_pages_prepare() {
 ## @details Commit previously prepared documentation
 ##
 github_doc_commit() {
+    if [[ -z "$1" ]] ; then
+        echo "FATAL: Argument 1 (temporary directory) not set." 1>&2
+        echo "       Aborting." 1>&2
+        echo "" 1>&2
+        exit 1
+    fi
     cd "$1" || exit 1
-    git add -A .
+    git add -A . || exit 1
     git commit -m 'Automated documentation update' -a || return 0
     git push
 }

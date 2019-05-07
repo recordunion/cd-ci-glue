@@ -3,6 +3,25 @@
 
 load ../src/cd-ci-glue
 
+@test "Github doc prepare without argument should fail" {
+    run _github_doc_prepare
+    [ "$status" -eq 1 ]
+    (
+        unset GH_TOKEN
+        run _github_doc_prepare 
+        [ "$status" -eq 1 ]
+    )
+}
+
+@test "Github incorrect github_doc_commit should fail" {
+    run github_doc_commit
+    [ "$status" -eq 1 ]
+    run github_doc_commit /nonexistant
+    [ "$status" -eq 1 ]
+    run github_doc_commit /tmp
+    [ "$status" -eq 1 ]
+}
+
 @test "Github pages documentation should work" {
     #
     # cd-ci-glue invocation; github_pages_prepare
@@ -40,12 +59,12 @@ load ../src/cd-ci-glue
 }
 
 @test "Github prepare should set user details" {
-    run _github_doc_prepare "https://${GH_TOKEN}@github.com/madworx/cd-ci-glue" "gh-pages"
+    run _github_doc_prepare "madworx/cd-ci-glue" "gh-pages"
     GIT_CODIR="${lines[@]}"
     [ "$status" -eq 0 ]
     ( cd "${GIT_CODIR}" && git config --local -l | egrep '^user[.](email|name)' | wc -l | xargs test 2 == )
 
-    run _github_doc_prepare "https://${GH_TOKEN}@github.com/madworx/cd-ci-glue"
+    run _github_doc_prepare "madworx/cd-ci-glue"
     GIT_CODIR="${lines[@]}"
     [ "$status" -eq 0 ]
     ( cd "${GIT_CODIR}" && git config --local -l | egrep '^user[.](email|name)' | wc -l | xargs test 2 == )
