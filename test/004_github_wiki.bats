@@ -25,5 +25,9 @@ load ../src/cd-ci-glue
     [ -f "${INDICATOR_FILE}" ]
     git rm "${INDICATOR_FILE}"
 
+    # Ensure that we don't leave the repo completely empty.
+    # Older versions of the git tool may fail attempting to check
+    # out an empty repo.
+    touch "${WIKIDIR}/non-empty"
     github_wiki_commit "${WIKIDIR}"
 }
