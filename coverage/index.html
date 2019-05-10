@@ -14,7 +14,7 @@
       <img src="./assets/0.10.2/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" style="display:none;">
-      <div class="timestamp">Generated <abbr class="timeago" title="2019-05-10T19:25:11+00:00">2019-05-10T19:25:11+00:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2019-05-10T20:38:11+00:00">2019-05-10T20:38:11+00:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -25,7 +25,7 @@
      covered at
      <span class="covered_strength">
        <span class="green">
-         4.5
+         6.8
        </span>
     </span> hits/line)
   </h2>
@@ -57,7 +57,7 @@
         <td>94</td>
         <td>94</td>
         <td>0</td>
-        <td>4.5</td>
+        <td>6.8</td>
       </tr>
       
     </tbody>
@@ -222,32 +222,32 @@
           <code class="ruby">##</code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="23">
-          <span class="hits">2</span>
+        <li class="covered" data-hits="10" data-linenumber="23">
+          <span class="hits">10</span>
           
           <code class="ruby">is_travis_branch_push() {   </code>
         </li>
       
-        <li class="covered" data-hits="12" data-linenumber="24">
-          <span class="hits">12</span>
+        <li class="covered" data-hits="20" data-linenumber="24">
+          <span class="hits">20</span>
           
           <code class="ruby">    if [[ ! -v TRAVIS_EVENT_TYPE ]] ; then</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="25">
-          <span class="hits">4</span>
+        <li class="covered" data-hits="8" data-linenumber="25">
+          <span class="hits">8</span>
           
           <code class="ruby">        echo &quot;WARNING: Travis CI environment variable TRAVIS_EVENT_TYPE not set.&quot;    1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="26">
-          <span class="hits">4</span>
+        <li class="covered" data-hits="8" data-linenumber="26">
+          <span class="hits">8</span>
           
           <code class="ruby">        echo &quot;         Unable to identify if this commit is related to PR or merge.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="27">
-          <span class="hits">4</span>
+        <li class="covered" data-hits="8" data-linenumber="27">
+          <span class="hits">8</span>
           
           <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
@@ -258,26 +258,26 @@
           <code class="ruby">    fi</code>
         </li>
       
-        <li class="covered" data-hits="12" data-linenumber="29">
-          <span class="hits">12</span>
+        <li class="covered" data-hits="20" data-linenumber="29">
+          <span class="hits">20</span>
           
           <code class="ruby">    if [[ ! -v TRAVIS_BRANCH ]] ; then</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="30">
-          <span class="hits">4</span>
+        <li class="covered" data-hits="8" data-linenumber="30">
+          <span class="hits">8</span>
           
           <code class="ruby">        echo &quot;WARNING: Travis CI environment variable TRAVIS_BRANCH not set.&quot;          1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="31">
-          <span class="hits">4</span>
+        <li class="covered" data-hits="8" data-linenumber="31">
+          <span class="hits">8</span>
           
           <code class="ruby">        echo &quot;         We&#39;ll assume this isn&#39;t related to a push on the \`$1&#39; branch.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="32">
-          <span class="hits">4</span>
+        <li class="covered" data-hits="8" data-linenumber="32">
+          <span class="hits">8</span>
           
           <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
@@ -288,8 +288,8 @@
           <code class="ruby">    fi</code>
         </li>
       
-        <li class="covered" data-hits="20" data-linenumber="34">
-          <span class="hits">20</span>
+        <li class="covered" data-hits="32" data-linenumber="34">
+          <span class="hits">32</span>
           
           <code class="ruby">    [[ &quot;${TRAVIS_EVENT_TYPE}&quot; == &quot;push&quot; ]] &amp;&amp; [[ &quot;${TRAVIS_BRANCH}&quot; == &quot;$1&quot; ]]</code>
         </li>
@@ -366,14 +366,14 @@
           <code class="ruby">##</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="47">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="5" data-linenumber="47">
+          <span class="hits">5</span>
           
           <code class="ruby">is_travis_master_push() {</code>
         </li>
       
-        <li class="covered" data-hits="6" data-linenumber="48">
-          <span class="hits">6</span>
+        <li class="covered" data-hits="10" data-linenumber="48">
+          <span class="hits">10</span>
           
           <code class="ruby">    is_travis_branch_push master</code>
         </li>
@@ -504,26 +504,26 @@
           <code class="ruby">##</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="70">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="5" data-linenumber="70">
+          <span class="hits">5</span>
           
           <code class="ruby">dockerhub_push_image() {</code>
         </li>
       
-        <li class="covered" data-hits="6" data-linenumber="71">
-          <span class="hits">6</span>
+        <li class="covered" data-hits="16" data-linenumber="71">
+          <span class="hits">16</span>
           
           <code class="ruby">    if [[ -v DOCKER_USERNAME ]] &amp;&amp; [[ -v DOCKER_PASSWORD ]] ; then</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="72">
-          <span class="hits">4</span>
+        <li class="covered" data-hits="12" data-linenumber="72">
+          <span class="hits">12</span>
           
           <code class="ruby">        echo &quot;${DOCKER_PASSWORD}&quot; | docker login -u &quot;${DOCKER_USERNAME}&quot; --password-stdin &amp;&amp; \</code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="73">
-          <span class="hits">2</span>
+        <li class="covered" data-hits="6" data-linenumber="73">
+          <span class="hits">6</span>
           
           <code class="ruby">            docker push &quot;$1&quot;</code>
         </li>
@@ -534,26 +534,26 @@
           <code class="ruby">    else</code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="75">
-          <span class="hits">2</span>
+        <li class="covered" data-hits="4" data-linenumber="75">
+          <span class="hits">4</span>
           
           <code class="ruby">        echo &quot;FATAL: Docker hub username/password environment variables &quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="76">
-          <span class="hits">2</span>
+        <li class="covered" data-hits="4" data-linenumber="76">
+          <span class="hits">4</span>
           
           <code class="ruby">        echo &quot;       DOCKER_USERNAME and/or DOCKER_PASSWORD not set. Aborting.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="77">
-          <span class="hits">2</span>
+        <li class="covered" data-hits="4" data-linenumber="77">
+          <span class="hits">4</span>
           
           <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="2" data-linenumber="78">
-          <span class="hits">2</span>
+        <li class="covered" data-hits="4" data-linenumber="78">
+          <span class="hits">4</span>
           
           <code class="ruby">        exit 1</code>
         </li>
@@ -654,44 +654,44 @@
           <code class="ruby">##</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="95">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="7" data-linenumber="95">
+          <span class="hits">7</span>
           
           <code class="ruby">dockerhub_set_description() {</code>
         </li>
       
-        <li class="covered" data-hits="7" data-linenumber="96">
-          <span class="hits">7</span>
+        <li class="covered" data-hits="16" data-linenumber="96">
+          <span class="hits">16</span>
           
           <code class="ruby">    : &quot;${_DOCKERHUB_URL:=https://hub.docker.com/v2}&quot;</code>
         </li>
       
-        <li class="covered" data-hits="7" data-linenumber="97">
-          <span class="hits">7</span>
+        <li class="covered" data-hits="16" data-linenumber="97">
+          <span class="hits">16</span>
           
           <code class="ruby">    echo &quot;Setting Docker hub description...&quot;</code>
         </li>
       
-        <li class="covered" data-hits="7" data-linenumber="98">
-          <span class="hits">7</span>
+        <li class="covered" data-hits="16" data-linenumber="98">
+          <span class="hits">16</span>
           
           <code class="ruby">    if [ -z &quot;$1&quot; ] ; then</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="99">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="99">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;FATAL: Missing argument 1 (repository name. e.g. madworx/docshell)&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="100">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="100">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="101">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="101">
+          <span class="hits">2</span>
           
           <code class="ruby">        exit 1</code>
         </li>
@@ -708,32 +708,32 @@
           <code class="ruby"></code>
         </li>
       
-        <li class="covered" data-hits="11" data-linenumber="104">
-          <span class="hits">11</span>
+        <li class="covered" data-hits="34" data-linenumber="104">
+          <span class="hits">34</span>
           
-          <code class="ruby">    if [ -z &quot;$2&quot; ] || [ ! -r &quot;$2&quot; ] ; then</code>
+          <code class="ruby">    if [ -z &quot;$2&quot; ] || [ ! -r &quot;$2&quot; ] || [ -d &quot;$2&quot; ] ; then</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="105">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="8" data-linenumber="105">
+          <span class="hits">8</span>
           
           <code class="ruby">        echo &quot;FATAL: Argument 2 (file name containing description) missing, &quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="106">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="8" data-linenumber="106">
+          <span class="hits">8</span>
           
           <code class="ruby">        echo &quot;       or doesn&#39;t point to a readable entity. Aborting.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="107">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="8" data-linenumber="107">
+          <span class="hits">8</span>
           
           <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="108">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="8" data-linenumber="108">
+          <span class="hits">8</span>
           
           <code class="ruby">        exit 1</code>
         </li>
@@ -750,8 +750,8 @@
           <code class="ruby"></code>
         </li>
       
-        <li class="covered" data-hits="9" data-linenumber="111">
-          <span class="hits">9</span>
+        <li class="covered" data-hits="10" data-linenumber="111">
+          <span class="hits">10</span>
           
           <code class="ruby">    if [[ -v DOCKER_USERNAME ]] &amp;&amp; [[ -v DOCKER_PASSWORD ]] ; then</code>
         </li>
@@ -882,26 +882,26 @@
           <code class="ruby">    else</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="133">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="133">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;FATAL: Docker hub username/password environment variables &quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="134">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="134">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;       DOCKER_USERNAME and/or DOCKER_PASSWORD not set. Aborting.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="135">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="135">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="136">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="136">
+          <span class="hits">2</span>
           
           <code class="ruby">        exit 1</code>
         </li>
@@ -948,38 +948,38 @@
           <code class="ruby">#</code>
         </li>
       
-        <li class="covered" data-hits="5" data-linenumber="144">
-          <span class="hits">5</span>
+        <li class="covered" data-hits="7" data-linenumber="144">
+          <span class="hits">7</span>
           
           <code class="ruby">_github_doc_prepare() {    </code>
         </li>
       
-        <li class="covered" data-hits="12" data-linenumber="145">
-          <span class="hits">12</span>
+        <li class="covered" data-hits="14" data-linenumber="145">
+          <span class="hits">14</span>
           
           <code class="ruby">    if [[ ! -v GH_TOKEN ]] ; then</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="146">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="146">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;FATAL: Github token environment variable GH_TOKEN not set.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="147">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="147">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;       Aborting.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="148">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="148">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="149">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="149">
+          <span class="hits">2</span>
           
           <code class="ruby">        exit 1</code>
         </li>
@@ -996,32 +996,32 @@
           <code class="ruby">    </code>
         </li>
       
-        <li class="covered" data-hits="11" data-linenumber="152">
-          <span class="hits">11</span>
+        <li class="covered" data-hits="12" data-linenumber="152">
+          <span class="hits">12</span>
           
           <code class="ruby">    if [[ -z &quot;$1&quot; ]] ; then</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="153">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="153">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;FATAL: Argument 1 (repository name, e.g. madworx/docshell) not set.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="154">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="154">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;       Aborting.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="155">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="155">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="156">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="156">
+          <span class="hits">2</span>
           
           <code class="ruby">        exit 1</code>
         </li>
@@ -1332,38 +1332,38 @@
           <code class="ruby">##</code>
         </li>
       
-        <li class="covered" data-hits="3" data-linenumber="208">
-          <span class="hits">3</span>
+        <li class="covered" data-hits="6" data-linenumber="208">
+          <span class="hits">6</span>
           
           <code class="ruby">github_doc_commit() {</code>
         </li>
       
-        <li class="covered" data-hits="9" data-linenumber="209">
-          <span class="hits">9</span>
+        <li class="covered" data-hits="12" data-linenumber="209">
+          <span class="hits">12</span>
           
           <code class="ruby">    if [[ -z &quot;$1&quot; ]] ; then</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="210">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="210">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;FATAL: Argument 1 (temporary directory) not set.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="211">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="211">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;       Aborting.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="212">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="212">
+          <span class="hits">2</span>
           
           <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="213">
-          <span class="hits">1</span>
+        <li class="covered" data-hits="2" data-linenumber="213">
+          <span class="hits">2</span>
           
           <code class="ruby">        exit 1</code>
         </li>
@@ -1374,14 +1374,14 @@
           <code class="ruby">    fi</code>
         </li>
       
-        <li class="covered" data-hits="9" data-linenumber="215">
-          <span class="hits">9</span>
+        <li class="covered" data-hits="12" data-linenumber="215">
+          <span class="hits">12</span>
           
           <code class="ruby">    cd &quot;$1&quot; || exit 1</code>
         </li>
       
-        <li class="covered" data-hits="8" data-linenumber="216">
-          <span class="hits">8</span>
+        <li class="covered" data-hits="10" data-linenumber="216">
+          <span class="hits">10</span>
           
           <code class="ruby">    git add -A . || exit 1</code>
         </li>
