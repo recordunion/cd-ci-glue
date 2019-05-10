@@ -3,7 +3,7 @@
 
 load ../src/cd-ci-glue
 
-DOCKER_IMAGE=madworx/cdci-dummy-test
+DOCKER_IMAGE=madworx/playground
 
 @test "DockerHub down should fail" {
     _DOCKERHUB_URL="http://localhost"
@@ -32,18 +32,17 @@ DOCKER_IMAGE=madworx/cdci-dummy-test
         [ "$status" -eq 1 ]
         run dockerhub_set_description
         [ "$status" -eq 1 ]
-        run dockerhub_push_image "${DOCKER_IMAGE}:latest"
+        run dockerhub_push_image "${DOCKER_IMAGE}:cdci-test"
         [ "$status" -eq 1 ]
     )
 }
 
 @test "DockerHub description update should work" {
-    dockerhub_set_description "${DOCKER_IMAGE}" <(echo "Last tested: $(date)")
-
+    (dockerhub_set_description "${DOCKER_IMAGE}" <(echo "cd-ci-glue last tested: $(date)"))
 }
 
 @test "DockerHub image push should work" {
-    docker build -t "${DOCKER_IMAGE}:latest" -f - . < <(echo -e 'FROM scratch\nMAINTAINER "dummy"')
-    dockerhub_push_image "${DOCKER_IMAGE}:latest"
+    docker build -q -t "${DOCKER_IMAGE}:cdci-test" -f - . < <(echo -e 'FROM scratch\nMAINTAINER "dummy"')
+    (dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")
 }
 

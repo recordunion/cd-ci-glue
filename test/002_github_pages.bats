@@ -14,10 +14,15 @@ load ../src/cd-ci-glue
 }
 
 @test "Github incorrect github_doc_commit should fail" {
+    # No arg
     run github_doc_commit
     [ "$status" -eq 1 ]
+
+    # Non-existent directory
     run github_doc_commit /nonexistant
     [ "$status" -eq 1 ]
+
+    # Incorrect directory
     run github_doc_commit /tmp
     [ "$status" -eq 1 ]
 }
@@ -27,7 +32,7 @@ load ../src/cd-ci-glue
     # cd-ci-glue invocation; github_pages_prepare
     #
     GIT_CODIR="$(github_pages_prepare madworx/cd-ci-glue)"
-    
+
     GIT_REMOTEDIR="$(mktemp -d)"
     ( cd "${GIT_REMOTEDIR}" && git init > /dev/null )
 
