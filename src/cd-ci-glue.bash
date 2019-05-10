@@ -101,7 +101,7 @@ dockerhub_set_description() {
         exit 1
     fi
 
-    if [ -z "$2" ] || [ ! -r "$2" ] ; then
+    if [ -z "$2" ] || [ ! -r "$2" ] || [ -d "$2" ] ; then
         echo "FATAL: Argument 2 (file name containing description) missing, " 1>&2
         echo "       or doesn't point to a readable entity. Aborting." 1>&2
         echo "" 1>&2

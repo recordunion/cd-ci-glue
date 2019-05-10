@@ -23,17 +23,11 @@ DOCKER_IMAGE=madworx/playground
     (
         unset DOCKER_USERNAME
         unset DOCKER_PASSWORD
-
-        run dockerhub_push_image
-        [ "$status" -eq 1 ]
-        run dockerhub_set_description "${DOCKER_IMAGE}" $0
-        [ "$status" -eq 1 ]
-        run dockerhub_set_description "${DOCKER_IMAGE}"
-        [ "$status" -eq 1 ]
-        run dockerhub_set_description
-        [ "$status" -eq 1 ]
-        run dockerhub_push_image "${DOCKER_IMAGE}:cdci-test"
-        [ "$status" -eq 1 ]
+        ! (dockerhub_push_image)
+        ! (dockerhub_set_description "${DOCKER_IMAGE}" $0)
+        ! (dockerhub_set_description "${DOCKER_IMAGE}")
+        ! (dockerhub_set_description)
+        ! (dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")
     )
 }
 
@@ -41,8 +35,28 @@ DOCKER_IMAGE=madworx/playground
     (dockerhub_set_description "${DOCKER_IMAGE}" <(echo "cd-ci-glue last tested: $(date)"))
 }
 
+@test "DockerHub description with non-existent file should fail" {
+    ! (dockerhub_set_description "${DOCKER_IMAGE}" /non-existent)
+}
+
+@test "DockerHub description with unreadable file should fail" {
+    TMPF="$(mktemp)"
+    echo "test" > "${TMPF}"
+    chmod 000 "${TMPF}"
+    ! (dockerhub_set_description "${DOCKER_IMAGE}" "${TMPF}")
+    rm -f "${TMPF}"
+}
+
+@test "DockerHub description with directory should fail" {
+    ! (dockerhub_set_description "${DOCKER_IMAGE}" "/tmp")
+}
+
 @test "DockerHub image push should work" {
     docker build -q -t "${DOCKER_IMAGE}:cdci-test" -f - . < <(echo -e 'FROM scratch\nMAINTAINER "dummy"')
     (dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")
 }
 
+@test "DockerHub image push of non-existent image should fail" {
+    ! (dockerhub_push_image "someimagewedonthave:latest")
+    ! (dockerhub_push_image "cat/someimagewedonthave:latest")
+}

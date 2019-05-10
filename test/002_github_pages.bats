@@ -8,23 +8,19 @@ load ../src/cd-ci-glue
     [ "$status" -eq 1 ]
     (
         unset GH_TOKEN
-        run _github_doc_prepare 
-        [ "$status" -eq 1 ]
+        ! (_github_doc_prepare)
     )
 }
 
 @test "Github incorrect github_doc_commit should fail" {
     # No arg
-    run github_doc_commit
-    [ "$status" -eq 1 ]
+    ! (github_doc_commit)
 
     # Non-existent directory
-    run github_doc_commit /nonexistant
-    [ "$status" -eq 1 ]
+    ! (github_doc_commit /nonexistant)
 
     # Incorrect directory
-    run github_doc_commit /tmp
-    [ "$status" -eq 1 ]
+    ! (github_doc_commit /tmp)
 }
 
 @test "Github pages documentation should work" {
