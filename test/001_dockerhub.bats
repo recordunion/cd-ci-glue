@@ -12,23 +12,19 @@ DOCKER_IMAGE=madworx/playground
 }
 
 @test "DockerHub description update w/ incorrect credentials should fail" {
-    (
-        DOCKER_PASSWORD=incorrectpassword
-        run dockerhub_set_description "${DOCKER_IMAGE}" <(echo "Last tested: $(date)")
-        [ "$status" -eq 1 ]
-    )
+    DOCKER_PASSWORD=incorrectpassword
+    run dockerhub_set_description "${DOCKER_IMAGE}" <(echo "Last tested: $(date)")
+    [ "$status" -eq 1 ]
 }
 
 @test "DockerHub operations without credentials should fail" {
-    (
-        unset DOCKER_USERNAME
-        unset DOCKER_PASSWORD
-        ! (dockerhub_push_image)
-        ! (dockerhub_set_description "${DOCKER_IMAGE}" $0)
-        ! (dockerhub_set_description "${DOCKER_IMAGE}")
-        ! (dockerhub_set_description)
-        ! (dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")
-    )
+    unset DOCKER_USERNAME
+    unset DOCKER_PASSWORD
+    ! (dockerhub_push_image)
+    ! (dockerhub_set_description "${DOCKER_IMAGE}" $0)
+    ! (dockerhub_set_description "${DOCKER_IMAGE}")
+    ! (dockerhub_set_description)
+    ! (dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")
 }
 
 @test "DockerHub description update should work" {

@@ -4,12 +4,9 @@
 load ../src/cd-ci-glue
 
 @test "Github doc prepare without argument should fail" {
-    run _github_doc_prepare
-    [ "$status" -eq 1 ]
-    (
-        unset GH_TOKEN
-        ! (_github_doc_prepare)
-    )
+    ! (_github_doc_prepare)
+    unset GH_TOKEN
+    ! (_github_doc_prepare)
 }
 
 @test "Github incorrect github_doc_commit should fail" {
@@ -45,7 +42,7 @@ load ../src/cd-ci-glue
     # cd-ci-glue invocation; github_doc_commit
     #
     github_doc_commit "${GIT_CODIR}"
-    
+
     GIT_NEWCLONE="$(mktemp -d)"
     git clone --branch gh-pages "${GIT_REMOTEDIR}" "${GIT_NEWCLONE}"
 

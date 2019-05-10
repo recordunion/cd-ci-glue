@@ -29,5 +29,6 @@ load ../src/cd-ci-glue
     # Older versions of the git tool may fail attempting to check
     # out an empty repo.
     touch "${WIKIDIR}/non-empty"
+    
     github_wiki_commit "${WIKIDIR}"
 }
