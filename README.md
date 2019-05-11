@@ -11,6 +11,23 @@ Docker Hub, and Travis CI.
 Primarily designed to  be sourced in Travis CI  scripts to automate
 publishing of artifacts and documentation.
 
+## Usage example
+
+``` shell
+$ source <(curl 'https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash')
+
+$ make docker && \
+  is_travis_master_push && \
+  dockerhub_push_image madworx/demoimage && \
+  dockerhub_set_description madworx/demoimage README.md
+
+$ make wikidocs && \
+  is_travis_master_push && \
+  GITDOC=$(github_wiki_prepare madworx/demoimage) && \
+  cp build/wiki/*.md "${GITDOC}/"
+  github_doc_commit "${GITDOC}"
+```
+
 ## Documentation
 
 Always-up-to-date generated documentation is available here: [cd-ci-glue.bash](https://madworx.github.io/cd-ci-glue/cd-ci-glue_8bash.html).

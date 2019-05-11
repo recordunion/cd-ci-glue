@@ -52,6 +52,23 @@ DOCKER_IMAGE=madworx/playground
     (dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")
 }
 
+@test "DockerHub image push w/ valid image but invalid credentials should fail" {
+    docker build -q -t "${DOCKER_IMAGE}:cdci-test" -f - . < <(echo -e 'FROM scratch\nMAINTAINER "dummy"')
+    (
+        unset DOCKER_USERNAME
+        !(dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")
+    )
+    (
+        unset DOCKER_PASSWORD
+        !(dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")
+    )
+    (
+        unset DOCKER_USERNAME
+        unset DOCKER_PASSWORD
+        !(dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")
+    )
+}
+
 @test "DockerHub image push of non-existent image should fail" {
     ! (dockerhub_push_image "someimagewedonthave:latest")
     ! (dockerhub_push_image "cat/someimagewedonthave:latest")

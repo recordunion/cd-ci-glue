@@ -12,7 +12,6 @@ before_script:
   - (git clone https://github.com/bats-core/bats-core.git && cd bats-core && ./install.sh ${HOME}/bats)
 
 script:
-  - make test
   - PATH=${HOME}/bats/bin:$PATH make coverage
   - make docs
 
