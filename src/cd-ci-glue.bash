@@ -280,3 +280,22 @@ awsecr_push_image() {
     docker push "${FULL_PATH}" > /dev/null || exit 1
     echo "${FULL_PATH}"
 }
+
+##
+## @fn github_releases_get_latest()
+## @par Environment variables
+##  @b GH_TOKEN Only required if querying a private repository. @n
+##
+## @par @b Please  @b note: There is a discrepancy  between the GitHub
+## "Releases   API"  vs.    what's   displayed  on   the  GitHub   web
+## page. Releases  displayed as "releases"  on the GitHub web  page is
+## not  necessarily  "releases",  but actually  tags.   Therefore,  we
+## instead look at the actual tags  since this maps better to expected
+## UX.
+##
+github_releases_get_latest() {
+    JSON=$(curl -fs "https://${GH_TOKEN:+$GH_TOKEN@}api.github.com/repos/$1/tags") || exit 1
+    LATEST_TAG="$(jq -r '.[0].name' <<<"${JSON}")" || exit 1
+    LATEST_TAG="$(echo "${LATEST_TAG}" | sed 's#[^a-zA-Z0-9.,_+-]##g')"
+    echo $LATEST_TAG
+}
