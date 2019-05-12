@@ -6,47 +6,58 @@
 ## https://github.com/madworx/cd-ci-glue @n
 ##
 
+
 ##
-## @fn is_travis_branch_push()
-## @brief Check if invoked from Travis CI on specific branch.
-## @param branch Branch name to compare to
+## @fn awsecr_login()
 ## @par Environment variables
-##  @b TRAVIS_EVENT_TYPE Variable set by Travis CI during build-time, indicating event type. @n
-##  @b TRAVIS_BRANCH Variable set by Travis CI during build-time, indicating which branch we're on. @n
+##  @b AWS_ACCESS_KEY_ID @n
+##  @b AWS_SECRET_ACCESS_KEY @n
+##  @b AWS_DEFAULT_REGION @n
 ##
-## @details Return a zero status code if  this is refering to a push on
-## the branch  given as argument.  If any of the  required environment
-## variables  are missing,  will  emit error  message  on stderr,  but
-## containue anyway  and assume that this  is not a push  event on the
-## desired branch.
+## Login to Amazon Elastic Container Registry. (ECR)
+## Outputs the repository URL to standard out. (E.g. `https://<aws_account_id>.dkr.ecr.<region>.amazonaws.com`)
 ##
-is_travis_branch_push() {   
-    if [[ ! -v TRAVIS_EVENT_TYPE ]] ; then
-        echo "WARNING: Travis CI environment variable TRAVIS_EVENT_TYPE not set."    1>&2
-        echo "         Unable to identify if this commit is related to PR or merge." 1>&2
-        echo "" 1>&2
-    fi
-    if [[ ! -v TRAVIS_BRANCH ]] ; then
-        echo "WARNING: Travis CI environment variable TRAVIS_BRANCH not set."          1>&2
-        echo "         We'll assume this isn't related to a push on the \`$1' branch." 1>&2
-        echo "" 1>&2
-    fi
-    [[ "${TRAVIS_EVENT_TYPE}" == "push" ]] && [[ "${TRAVIS_BRANCH}" == "$1" ]]
+## @par Example
+## `$ REGISTRY_URL="$(awsecr_login)" || exit 1` @n
+## `$ docker run "${REGISTRY_URL}/madworx/robotframework-kicadlibrary"` @n
+##
+awsecr_login() {    
+    LOGIN_STR=$(aws ecr get-login) || exit 1
+    LOGIN_SH=${LOGIN_STR/-e none /}
+    REGISTRY_PATH=${LOGIN_SH/* /}
+    REGISTRY_PATH=${REGISTRY_PATH/https*:\/\//}
+
+    sh - <<<"${LOGIN_SH}" >/dev/null 2>&1 || exit 1
+    echo "${REGISTRY_PATH}"
 }
 
 
 ##
-## @fn is_travis_master_push()
+## @fn awsecr_push_image()
+## @param image Image identifier (e.g. `madworx/docshell:3.14`)
 ## @par Environment variables
-##  @b TRAVIS_EVENT_TYPE Variable set by Travis CI during build-time, indicating event type. @n
-##  @b TRAVIS_BRANCH Variable set by Travis CI during build-time, indicating which branch we're on. @n
+##  @b AWS_ACCESS_KEY_ID @n
+##  @b AWS_SECRET_ACCESS_KEY @n
+##  @b AWS_DEFAULT_REGION @n
 ##
-## @details Return a  zero status code if this is  referring to a push
-## to the 'master' branch.
+## Push a locally built docker image to Amazon ECR. This function will
+## as a side-effect  tag the local image with the  ECR remote registry
+## URL prefix.
 ##
-is_travis_master_push() {
-    is_travis_branch_push master
+## @par Example
+## `$ docker build -t madworx/sample:1.0.1 .` @n
+## `$ FULL_PATH="$(awsecr_push_image madworx/sample:1.0.1)" || exit 1` @n
+## `$ docker run "${FULL_PATH}"`
+##
+awsecr_push_image() {
+    REGISTRY_URL=$(awsecr_login) || exit 1
+    FULL_PATH="${REGISTRY_URL}/${1}"
+    
+    docker tag "${1}" "${FULL_PATH}" || exit 1
+    docker push "${FULL_PATH}" > /dev/null || exit 1
+    echo "${FULL_PATH}"
 }
+
 
 ##
 ## @fn dockerhub_push_image()
@@ -59,7 +70,7 @@ is_travis_master_push() {
 ## @details Push a  docker image from the local machine  to the Docker
 ## Hub  repository,  logging  in   using  the  `$DOCKER_USERNAME`  and
 ## `$DOCKER_PASSWORD` environment  variables. You need to  have tagged
-## this image beforehand e.g. docker tag.
+## this image beforehand. (i.e. `docker tag`)
 ##
 ## @par Example
 ## `$ docker build -t madworx/debian-archive:lenny-04815d2 .` @n
@@ -137,6 +148,7 @@ dockerhub_set_description() {
     fi
 }
 
+
 #
 # Argument: $1 = repository name. e.g. madworx/docshell.
 # Argument: $2 = branch name (optional)
@@ -171,31 +183,17 @@ _github_doc_prepare() {
 }
 
 ##
-## @fn github_wiki_prepare()
-## @param repository Name of GitHub repository; e.g. `madworx/docshell`.
-## @par Environment variables
-##  @b GH_TOKEN Valid GitHub personal access token. @n
-## @details Outputs the temporary directory name you're supposed to put the Wiki
-## files into.
-##
-github_wiki_prepare() {
-    TMPDR=$(_github_doc_prepare "${1}.wiki.git") || exit 1
-    pushd "${TMPDR}" >/dev/null || exit 1
-    git rm -r . >/dev/null 2>&1 || true
-    popd >/dev/null || exit 1
-    echo "${TMPDR}"
-}
-
-##
 ## @fn github_pages_prepare()
 ## @param repository Name of GitHub repository; e.g. `madworx/docshell`.
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
+##
 ## @details Outputs the temporary directory of the gh-pages branch.
 ##
 github_pages_prepare() {
     _github_doc_prepare "${1}" "gh-pages" || exit 1
 }
+
 
 ##
 ## @fn github_doc_commit()
@@ -218,6 +216,29 @@ github_doc_commit() {
     git push
 }
 
+
+##
+## @fn github_releases_get_latest()
+## @par Environment variables
+##  @b GH_TOKEN Only required if querying a private repository. @n
+##
+## Returns the latest tagged version on the given repository.
+##
+## @par @b Please note: @n
+## There  is  a discrepancy  between  the  GitHub "Releases  API"  vs.
+## what's  displayed on  the GitHub  web page.  Releases displayed  as
+## "releases" on  the GitHub web  page is not  necessarily "releases",
+## but actually tags.   Therefore, we instead look at  the actual tags
+## since this maps better to expected UX.
+##
+github_releases_get_latest() {
+    JSON=$(curl -fs "https://${GH_TOKEN:+$GH_TOKEN@}api.github.com/repos/$1/tags") || exit 1
+    LATEST_TAG="$(jq -r '.[0].name' <<<"${JSON}")" || exit 1
+    LATEST_TAG="$(echo "${LATEST_TAG}" | sed 's#[^a-zA-Z0-9.,_+-]##g')"
+    echo $LATEST_TAG
+}
+
+
 ##
 ## @fn github_wiki_commit()
 ## @deprecated This function is deprecated. Use the generic `github_doc_commit` function instead.
@@ -232,70 +253,63 @@ github_wiki_commit() {
     github_doc_commit "$1"
 }
 
-##
-## @fn awsecr_login()
-## @par Environment variables
-##  @b AWS_ACCESS_KEY_ID @n
-##  @b AWS_SECRET_ACCESS_KEY @n
-##  @b AWS_DEFAULT_REGION @n
-##
-## @par Example
-## `$ REGISTRY_URL="$(awsecr_login)" || exit 1` @n
-## `$ docker run "${REGISTRY_URL}/madworx/robotframework-kicadlibrary"` @n
-##
-## Login to Amazon Elastic Container Registry. (ECR)
-##
-awsecr_login() {    
-    LOGIN_STR=$(aws ecr get-login) || exit 1
-    LOGIN_SH=${LOGIN_STR/-e none /}
-    REGISTRY_PATH=${LOGIN_SH/* /}
-    REGISTRY_PATH=${REGISTRY_PATH/https*:\/\//}
 
-    sh - <<<"${LOGIN_SH}" >/dev/null 2>&1 || exit 1
-    echo "${REGISTRY_PATH}"
+##
+## @fn github_wiki_prepare()
+## @param repository Name of GitHub repository; e.g. `madworx/docshell`.
+## @par Environment variables
+##  @b GH_TOKEN Valid GitHub personal access token. @n
+##
+## @details Outputs the temporary directory name you're supposed to put the Wiki
+## files into.
+##
+github_wiki_prepare() {
+    TMPDR=$(_github_doc_prepare "${1}.wiki.git") || exit 1
+    pushd "${TMPDR}" >/dev/null || exit 1
+    git rm -r . >/dev/null 2>&1 || true
+    popd >/dev/null || exit 1
+    echo "${TMPDR}"
 }
 
-##
-## @fn awsecr_push_image()
-## @param image Image identifier (e.g. `madworx/docshell:3.14')
-## @par Environment variables
-##  @b AWS_ACCESS_KEY_ID @n
-##  @b AWS_SECRET_ACCESS_KEY @n
-##  @b AWS_DEFAULT_REGION @n
-##
-## @par Example
-## `$ docker build -t madworx/sample:1.0.1 .` @n
-## `$ FULL_PATH="$(awsecr_push_image madworx/sample:1.0.1)" || exit 1` @n
-## `$ docker run "${FULL_PATH}"`
-##
-## Push a locally built docker image to Amazon ECR. This function will
-## as a side-effect  tag the local image with the  ECR remote registry
-## URL prefix.
-##
-awsecr_push_image() {
-    REGISTRY_URL=$(awsecr_login) || exit 1
-    FULL_PATH="${REGISTRY_URL}/${1}"
-    
-    docker tag "${1}" "${FULL_PATH}" || exit 1
-    docker push "${FULL_PATH}" > /dev/null || exit 1
-    echo "${FULL_PATH}"
-}
 
 ##
-## @fn github_releases_get_latest()
+## @fn is_travis_branch_push()
+## @brief Check if invoked from Travis CI on specific branch.
+## @param branch Branch name to compare to
 ## @par Environment variables
-##  @b GH_TOKEN Only required if querying a private repository. @n
+##  @b TRAVIS_EVENT_TYPE Variable set by Travis CI during build-time, indicating event type. @n
+##  @b TRAVIS_BRANCH Variable set by Travis CI during build-time, indicating which branch we're on. @n
 ##
-## @par @b Please  @b note: There is a discrepancy  between the GitHub
-## "Releases   API"  vs.    what's   displayed  on   the  GitHub   web
-## page. Releases  displayed as "releases"  on the GitHub web  page is
-## not  necessarily  "releases",  but actually  tags.   Therefore,  we
-## instead look at the actual tags  since this maps better to expected
-## UX.
+## @details Return a zero status code if  this is refering to a push on
+## the branch  given as argument.  If any of the  required environment
+## variables  are missing,  will  emit error  message  on stderr,  but
+## containue anyway  and assume that this  is not a push  event on the
+## desired branch.
 ##
-github_releases_get_latest() {
-    JSON=$(curl -fs "https://${GH_TOKEN:+$GH_TOKEN@}api.github.com/repos/$1/tags") || exit 1
-    LATEST_TAG="$(jq -r '.[0].name' <<<"${JSON}")" || exit 1
-    LATEST_TAG="$(echo "${LATEST_TAG}" | sed 's#[^a-zA-Z0-9.,_+-]##g')"
-    echo $LATEST_TAG
+is_travis_branch_push() {   
+    if [[ ! -v TRAVIS_EVENT_TYPE ]] ; then
+        echo "WARNING: Travis CI environment variable TRAVIS_EVENT_TYPE not set."    1>&2
+        echo "         Unable to identify if this commit is related to PR or merge." 1>&2
+        echo "" 1>&2
+    fi
+    if [[ ! -v TRAVIS_BRANCH ]] ; then
+        echo "WARNING: Travis CI environment variable TRAVIS_BRANCH not set."          1>&2
+        echo "         We'll assume this isn't related to a push on the \`$1' branch." 1>&2
+        echo "" 1>&2
+    fi
+    [[ "${TRAVIS_EVENT_TYPE}" == "push" ]] && [[ "${TRAVIS_BRANCH}" == "$1" ]]
+}
+
+
+##
+## @fn is_travis_master_push()
+## @par Environment variables
+##  @b TRAVIS_EVENT_TYPE Variable set by Travis CI during build-time, indicating event type. @n
+##  @b TRAVIS_BRANCH Variable set by Travis CI during build-time, indicating which branch we're on. @n
+##
+## @details Return a  zero status code if this is  referring to a push
+## to the 'master' branch.
+##
+is_travis_master_push() {
+    is_travis_branch_push master
 }
