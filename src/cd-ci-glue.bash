@@ -7,6 +7,22 @@
 ##
 
 
+_aws_ensure_environment() {
+    if [[ -v AWS_ACCESS_KEY_ID ]] && [[ -v AWS_SECRET_ACCESS_KEY ]] && [[ -v AWS_DEFAULT_REGION ]] ; then
+        # validate tool exist.
+        type aws >/dev/null 2>&1 || (
+            echo "FATAL: 'aws' command not found. Please install 'awscli' package." 1>&2
+            exit 1
+        )
+    else
+        echo "FATAL: AWScli environment variables \$AWS_ACCESS_KEY_ID, \$AWS_SECRET_ACCESS_KEY" 1>&2
+        echo "or \$AWS_DEFAULT_REGION not set. Aborting." 1>&2
+        echo "" 1>&2
+        exit 1
+    fi
+}
+
+
 ##
 ## @fn awsecr_login()
 ## @par Environment variables
@@ -21,7 +37,8 @@
 ## `$ REGISTRY_URL="$(awsecr_login)" || exit 1` @n
 ## `$ docker run "${REGISTRY_URL}/madworx/robotframework-kicadlibrary"` @n
 ##
-awsecr_login() {    
+awsecr_login() {
+    _aws_ensure_environment || exit 1
     LOGIN_STR=$(aws ecr get-login) || exit 1
     LOGIN_SH=${LOGIN_STR/-e none /}
     REGISTRY_PATH=${LOGIN_SH/* /}
@@ -30,7 +47,6 @@ awsecr_login() {
     sh - <<<"${LOGIN_SH}" >/dev/null 2>&1 || exit 1
     echo "${REGISTRY_PATH}"
 }
-
 
 ##
 ## @fn awsecr_push_image()
@@ -50,12 +66,26 @@ awsecr_login() {
 ## `$ docker run "${FULL_PATH}"`
 ##
 awsecr_push_image() {
+    _aws_ensure_environment || exit 1
     REGISTRY_URL=$(awsecr_login) || exit 1
     FULL_PATH="${REGISTRY_URL}/${1}"
-    
     docker tag "${1}" "${FULL_PATH}" || exit 1
     docker push "${FULL_PATH}" > /dev/null || exit 1
     echo "${FULL_PATH}"
+}
+
+_dockerhub_ensure_environment() {
+    if [[ -v DOCKER_USERNAME ]] && [[ -v DOCKER_PASSWORD ]] ; then
+        type docker >/dev/null 2>&1 || (
+            echo "FATAL: 'docker' command not found. Please install docker engine/cli." 1>&2
+            exit 1
+        )
+    else
+        echo "FATAL: Docker hub username/password environment variables " 1>&2
+        echo "       DOCKER_USERNAME and/or DOCKER_PASSWORD not set. Aborting." 1>&2
+        echo "" 1>&2
+        exit 1
+    fi
 }
 
 
@@ -79,16 +109,11 @@ awsecr_push_image() {
 ## `$ dockerhub_push_image madworx/debian-archive:lenny` @n
 ##
 dockerhub_push_image() {
-    if [[ -v DOCKER_USERNAME ]] && [[ -v DOCKER_PASSWORD ]] ; then
-        echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin && \
-            docker push "$1"
-    else
-        echo "FATAL: Docker hub username/password environment variables " 1>&2
-        echo "       DOCKER_USERNAME and/or DOCKER_PASSWORD not set. Aborting." 1>&2
-        echo "" 1>&2
-        exit 1
-    fi
+    _dockerhub_ensure_environment || exit 1
+    echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin && \
+        docker push "$1"
 }
+
 
 ##
 ## @fn dockerhub_set_description()
@@ -104,6 +129,7 @@ dockerhub_push_image() {
 ## `$ dockerhub_set_description madworx/docshell README.md` @n
 ##
 dockerhub_set_description() {
+    _dockerhub_ensure_environment || exit 1
     : "${_DOCKERHUB_URL:=https://hub.docker.com/v2}"
     echo "Setting Docker hub description..."
     if [ -z "$1" ] ; then
@@ -119,20 +145,19 @@ dockerhub_set_description() {
         exit 1
     fi
 
-    if [[ -v DOCKER_USERNAME ]] && [[ -v DOCKER_PASSWORD ]] ; then
-        echo "Logging onto Docker hub..."
-        PAYLOAD='{"username": "'"${DOCKER_USERNAME}"'", "password": "'"${DOCKER_PASSWORD}"'"}'
-        TOKEN=$(curl -f -s -H "Content-Type: application/json" -X POST -d "${PAYLOAD}" "${_DOCKERHUB_URL}/users/login/" | jq -r '.token')
+    echo "Logging onto Docker hub..."
+    PAYLOAD='{"username": "'"${DOCKER_USERNAME}"'", "password": "'"${DOCKER_PASSWORD}"'"}'
+    TOKEN=$(curl -f -s -H "Content-Type: application/json" -X POST -d "${PAYLOAD}" "${_DOCKERHUB_URL}/users/login/" | jq -r '.token')
 
-        if [ -z "${TOKEN}" ] ; then
-            echo "FATAL: Unable to logon to Docker Hub using provided credentials" 1>&2
-            echo "       DOCKER_USERNAME and/or DOCKER_PASSWORD incorrectly set. Aborting." 1>&2
-            exit 1
-        fi
+    if [ -z "${TOKEN}" ] ; then
+        echo "FATAL: Unable to logon to Docker Hub using provided credentials" 1>&2
+        echo "       DOCKER_USERNAME and/or DOCKER_PASSWORD incorrectly set. Aborting." 1>&2
+        exit 1
+    fi
 
-        echo "Setting Docker hub description of image $1 ...."
-        # shellcheck disable=SC1117
-        perl -ne "BEGIN{ print '{\"full_description\":\"';} END{ print '\"}' } s#\n#\\\n#msg;s#\"#\\\\\"#msg;print;" "$2" | \
+    echo "Setting Docker hub description of image $1 ...."
+    # shellcheck disable=SC1117
+    perl -ne "BEGIN{ print '{\"full_description\":\"';} END{ print '\"}' } s#\n#\\\n#msg;s#\"#\\\\\"#msg;print;" "$2" | \
         curl -f \
              -s \
              -H "Content-Type: application/json" \
@@ -140,12 +165,6 @@ dockerhub_set_description() {
              -X PATCH \
              -d@/dev/stdin \
              "${_DOCKERHUB_URL}/repositories/$1/" >/dev/null
-    else
-        echo "FATAL: Docker hub username/password environment variables " 1>&2
-        echo "       DOCKER_USERNAME and/or DOCKER_PASSWORD not set. Aborting." 1>&2
-        echo "" 1>&2
-        exit 1
-    fi
 }
 
 

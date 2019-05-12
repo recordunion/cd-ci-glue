@@ -12,6 +12,17 @@ docker build -t "${DOCKER_IMAGE}:test-ecr" - \
     (awsecr_push_image "${DOCKER_IMAGE}:test-ecr")
 }
 
+@test "Amazon ECR push with invalid secrets should fail" {
+    (
+        export AWS_ACCESS_KEY_ID=adfkjahhs
+        ! (awsecr_push_image "${DOCKER_IMAGE}:test-ecr")
+    )
+    (
+        export AWS_ACCESS_SECRET_KEY=adfkjahhs
+        ! (awsecr_push_image "${DOCKER_IMAGE}:test-ecr")
+    )
+}
+
 @test "Amazon ECR push w/ non-existent local image should fail" {
     ! (awsecr_push_image "${DOCKER_IMAGE}:tadfasdfest-ecr")
 }
