@@ -110,12 +110,68 @@ Functions</h2></td></tr>
 <tr class="separator:a85c61403f600caead4e65d0cadef072a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a568b5c1980de49f8ca9cca1d271d2344"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cd-ci-glue_8bash.html#a568b5c1980de49f8ca9cca1d271d2344">github_wiki_commit</a> (dir)</td></tr>
 <tr class="separator:a568b5c1980de49f8ca9cca1d271d2344"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6eb88fdada2bfc97f9322a369be4e14"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cd-ci-glue_8bash.html#ab6eb88fdada2bfc97f9322a369be4e14">awsecr_login</a> ()</td></tr>
+<tr class="separator:ab6eb88fdada2bfc97f9322a369be4e14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70b4f1100a1dce00308dff41db35961a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cd-ci-glue_8bash.html#a70b4f1100a1dce00308dff41db35961a">awsecr_push_image</a> (image)</td></tr>
+<tr class="separator:a70b4f1100a1dce00308dff41db35961a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Martin Kjellstrand <a href="#" onclick="location.href='mai'+'lto:'+'mar'+'ti'+'n.k'+'je'+'lls'+'tr'+'and'+'@m'+'adw'+'or'+'x.s'+'e'; return false;">marti<span style="display: none;">.nosp@m.</span>n.kj<span style="display: none;">.nosp@m.</span>ellst<span style="display: none;">.nosp@m.</span>rand<span style="display: none;">.nosp@m.</span>@madw<span style="display: none;">.nosp@m.</span>orx.<span style="display: none;">.nosp@m.</span>se</a> </dd></dl>
 <dl class="section user"><dt>URL</dt><dd><a href="https://github.com/madworx/cd-ci-glue">https://github.com/madworx/cd-ci-glue</a> <br/>
 </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="ab6eb88fdada2bfc97f9322a369be4e14"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">awsecr_login </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section user"><dt>Environment variables</dt><dd><b>AWS_ACCESS_KEY_ID</b> <br/>
+ <b>AWS_SECRET_ACCESS_KEY</b> <br/>
+ <b>AWS_DEFAULT_REGION</b> <br/>
+ </dd></dl>
+<dl class="section user"><dt>Example</dt><dd><code>$ REGISTRY_URL="$(awsecr_login)" || exit 1</code> <br/>
+<code>$ docker run "${REGISTRY_URL}/madworx/robotframework-kicadlibrary"</code> <br/>
+ Login to Amazon Elastic Container Registry. (ECR) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a70b4f1100a1dce00308dff41db35961a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">awsecr_push_image </td>
+          <td>(</td>
+          <td class="paramtype">image&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>Image identifier (e.g. `madworx/docshell:3.14') </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Environment variables</dt><dd><b>AWS_ACCESS_KEY_ID</b> <br/>
+ <b>AWS_SECRET_ACCESS_KEY</b> <br/>
+ <b>AWS_DEFAULT_REGION</b> <br/>
+ </dd></dl>
+<dl class="section user"><dt>Example</dt><dd><code>$ docker build -t madworx/sample:1.0.1 .</code> <br/>
+<code>$ FULL_PATH="$(awsecr_push_image madworx/sample:1.0.1)" || exit 1</code> <br/>
+<code>$ docker run "${FULL_PATH}"</code></dd></dl>
+<p>Push a locally built docker image to Amazon ECR. This function will as a side-effect tag the local image with the ECR remote registry URL prefix. </p>
+
+</div>
+</div>
 <a class="anchor" id="a8a504f91b67c21070633c30965a6398f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -340,7 +396,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat May 11 2019 09:38:49 for cd-ci-glue by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun May 12 2019 11:12:36 for cd-ci-glue by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['dockerhub_5fpush_5fimage',['dockerhub_push_image',['../cd-ci-glue_8bash.html#a8a504f91b67c21070633c30965a6398f',1,'cd-ci-glue.bash']]],
-  ['dockerhub_5fset_5fdescription',['dockerhub_set_description',['../cd-ci-glue_8bash.html#a8c5df6586f9a2224c0f69d3e24480699',1,'cd-ci-glue.bash']]]
+  ['awsecr_5flogin',['awsecr_login',['../cd-ci-glue_8bash.html#ab6eb88fdada2bfc97f9322a369be4e14',1,'cd-ci-glue.bash']]],
+  ['awsecr_5fpush_5fimage',['awsecr_push_image',['../cd-ci-glue_8bash.html#a70b4f1100a1dce00308dff41db35961a',1,'cd-ci-glue.bash']]]
 ];
