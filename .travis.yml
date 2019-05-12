@@ -1,4 +1,4 @@
-language: minimal
+language: python
 
 sudo: false
 
@@ -8,6 +8,7 @@ addons:
       - doxygen
 
 before_script:
+  - pip install awscli
   - gem install bashcov
   - (git clone https://github.com/bats-core/bats-core.git && cd bats-core && ./install.sh ${HOME}/bats)
 
@@ -22,3 +23,7 @@ after_success:
   - cp -a docs/html/*  "${GHDIR}/"
   - cp -a src/coverage -t "${GHDIR}/"
   - is_travis_master_push && github_doc_commit "${GHDIR}"
+
+after_failure:
+  - cat /tmp/call.log
+

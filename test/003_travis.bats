@@ -2,7 +2,6 @@
 # -*- mode: sh -*-
 
 load ../src/cd-ci-glue
-load bats-common
 
 @test "Travis CI operations should match" {
     (TRAVIS_BRANCH=master TRAVIS_EVENT_TYPE=push is_travis_master_push)

@@ -2,17 +2,11 @@
 # -*- mode: sh -*-
 
 load ../src/cd-ci-glue
-load bats-common
 
 DOCKER_IMAGE="madworx/playground"
 
-local_suite_setup() {
-	 docker build -q -t "${DOCKER_IMAGE}:test-ecr" -f - . > /dev/null <<EOF
-FROM busybox:latest
-MAINTAINER "test ecr maint"
-CMD [ "/bin/sh", "-c", "echo ok-output" ]
-EOF
-}
+docker build -t "${DOCKER_IMAGE}:test-ecr" - \
+       < <(echo -e 'FROM busybox:latest\nMAINTAINER "test ecr maint\nCMD [ "/bin/sh", "-c", "echo ok-output" ]') > /tmp/docker.debug.log 2>&1
 
 @test "Amazon ECR push should work" {
     (awsecr_push_image "${DOCKER_IMAGE}:test-ecr")
@@ -31,6 +25,17 @@ EOF
 
 @test "Amazon ECR push+pull+run should work" {
     FULL_PATH=$(awsecr_push_image "${DOCKER_IMAGE}:test-ecr") || false
+    docker rmi "${FULL_PATH}" > /dev/null
+    OUTPUT="$(docker run "${FULL_PATH}")" || false
+    if [ "${OUTPUT}" != "ok-output" ] ; then
+        echo "Unable to verify output from pulled image." 1>&2
+        false
+    fi
+}
+
+@test "Amazon ECR login+pull+run should work" {
+    REPO_PATH=$(awsecr_login) || false
+    FULL_PATH="${REPO_PATH}/${DOCKER_IMAGE}:test-ecr"
     docker rmi "${FULL_PATH}" > /dev/null
     OUTPUT="$(docker run "${FULL_PATH}")" || false
     if [ "${OUTPUT}" != "ok-output" ] ; then

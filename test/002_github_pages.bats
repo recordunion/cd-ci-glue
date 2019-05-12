@@ -2,7 +2,6 @@
 # -*- mode: sh -*-
 
 load ../src/cd-ci-glue
-load bats-common
 
 @test "Github doc prepare without argument should fail" {
     ! (_github_doc_prepare)

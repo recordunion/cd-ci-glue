@@ -2,7 +2,6 @@
 # -*- mode: sh -*-
 
 load ../src/cd-ci-glue
-load bats-common
 
 @test "Github Wiki should work" {
     WIKIDIR=$(github_wiki_prepare "madworx/playground")
@@ -21,10 +20,12 @@ load bats-common
     # Check it out again, should now be available if we reset it.
     WIKIDIR=$(github_wiki_prepare "madworx/playground")
 
-    cd "${WIKIDIR}"
-    git reset --hard
-    [ -f "${INDICATOR_FILE}" ]
-    git rm "${INDICATOR_FILE}"
+    (
+        cd "${WIKIDIR}"
+        git reset --hard
+        [ -f "${INDICATOR_FILE}" ]
+        git rm "${INDICATOR_FILE}"
+    )
 
     # Ensure that we don't leave the repo completely empty.
     # Older versions of the git tool may fail attempting to check

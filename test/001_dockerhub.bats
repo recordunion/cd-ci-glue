@@ -2,13 +2,13 @@
 # -*- mode: sh -*-
 
 load ../src/cd-ci-glue
-load bats-common
 
 DOCKER_IMAGE="madworx/playground"
 
-local_suite_setup() {
-    docker build -q -t "${DOCKER_IMAGE}:cdci-test" -f - . < <(echo -e 'FROM scratch\nMAINTAINER "dummy"') > /dev/null
-}
+docker build -q -t "${DOCKER_IMAGE}:cdci-test" - > /dev/null <<EOF
+FROM scratch
+MAINTAINER "dummy"
+EOF
 
 @test "DockerHub down should fail" {
     _DOCKERHUB_URL="http://localhost"
