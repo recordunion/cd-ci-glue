@@ -1,5 +1,5 @@
 {
-  "/bin/bash /home/travis/bats/bin/bats ./test/001_dockerhub.bats ./test/002_github_pages.bats ./test/003_travis.bats ./test/004_github_wiki.bats ./test/005_awsecr.bats": {
+  "/bin/bash /home/travis/bats/bin/bats ./test/001_dockerhub.bats ./test/002_github_pages.bats ./test/003_travis.bats ./test/004_github_wiki.bats ./test/005_awsecr.bats ./test/006_github_releases.bats": {
     "coverage": {
       "/home/travis/build/madworx/cd-ci-glue/src/cd-ci-glue.bash": [
         null,
@@ -282,9 +282,28 @@
         null,
         8,
         4,
+        4,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        4,
+        20,
+        8,
+        12,
         4
       ]
     },
-    "timestamp": 1557659555
+    "timestamp": 1557674022
   }
 }
