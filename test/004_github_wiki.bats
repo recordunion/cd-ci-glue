@@ -2,6 +2,7 @@
 # -*- mode: sh -*-
 
 load ../src/cd-ci-glue
+load bats-common
 
 @test "Github Wiki should work" {
     WIKIDIR=$(github_wiki_prepare "madworx/playground")

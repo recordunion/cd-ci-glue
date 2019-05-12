@@ -2,8 +2,13 @@
 # -*- mode: sh -*-
 
 load ../src/cd-ci-glue
+load bats-common
 
-DOCKER_IMAGE=madworx/playground
+DOCKER_IMAGE="madworx/playground"
+
+local_suite_setup() {
+    docker build -q -t "${DOCKER_IMAGE}:cdci-test" -f - . < <(echo -e 'FROM scratch\nMAINTAINER "dummy"') > /dev/null
+}
 
 @test "DockerHub down should fail" {
     _DOCKERHUB_URL="http://localhost"
@@ -48,12 +53,10 @@ DOCKER_IMAGE=madworx/playground
 }
 
 @test "DockerHub image push should work" {
-    docker build -q -t "${DOCKER_IMAGE}:cdci-test" -f - . < <(echo -e 'FROM scratch\nMAINTAINER "dummy"')
     (dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")
 }
 
 @test "DockerHub image push w/ valid image but invalid credentials should fail" {
-    docker build -q -t "${DOCKER_IMAGE}:cdci-test" -f - . < <(echo -e 'FROM scratch\nMAINTAINER "dummy"')
     (
         unset DOCKER_USERNAME
         !(dockerhub_push_image "${DOCKER_IMAGE}:cdci-test")

@@ -232,3 +232,51 @@ github_wiki_commit() {
     github_doc_commit "$1"
 }
 
+##
+## @fn awsecr_login()
+## @par Environment variables
+##  @b AWS_ACCESS_KEY_ID @n
+##  @b AWS_SECRET_ACCESS_KEY @n
+##  @b AWS_DEFAULT_REGION @n
+##
+## @par Example
+## `$ REGISTRY_URL="$(awsecr_login)" || exit 1` @n
+## `$ docker run "${REGISTRY_URL}/madworx/robotframework-kicadlibrary"` @n
+##
+## Login to Amazon Elastic Container Registry. (ECR)
+##
+awsecr_login() {    
+    LOGIN_STR=$(aws ecr get-login) || exit 1
+    LOGIN_SH=${LOGIN_STR/-e none /}
+    REGISTRY_PATH=${LOGIN_SH/* /}
+    REGISTRY_PATH=${REGISTRY_PATH/https*:\/\//}
+
+    sh - <<<"${LOGIN_SH}" >/dev/null 2>&1 || exit 1
+    echo "${REGISTRY_PATH}"
+}
+
+##
+## @fn awsecr_push_image()
+## @param image Image identifier (e.g. `madworx/docshell:3.14')
+## @par Environment variables
+##  @b AWS_ACCESS_KEY_ID @n
+##  @b AWS_SECRET_ACCESS_KEY @n
+##  @b AWS_DEFAULT_REGION @n
+##
+## @par Example
+## `$ docker build -t madworx/sample:1.0.1 .` @n
+## `$ FULL_PATH="$(awsecr_push_image madworx/sample:1.0.1)" || exit 1` @n
+## `$ docker run "${FULL_PATH}"`
+##
+## Push a locally built docker image to Amazon ECR. This function will
+## as a side-effect  tag the local image with the  ECR remote registry
+## URL prefix.
+##
+awsecr_push_image() {
+    REGISTRY_URL=$(awsecr_login) || exit 1
+    FULL_PATH="${REGISTRY_URL}/${1}"
+    
+    docker tag "${1}" "${FULL_PATH}" || exit 1
+    docker push "${FULL_PATH}" > /dev/null || exit 1
+    echo "${FULL_PATH}"
+}
