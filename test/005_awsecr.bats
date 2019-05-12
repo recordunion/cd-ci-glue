@@ -8,19 +8,13 @@ DOCKER_IMAGE="madworx/playground"
 docker build -t "${DOCKER_IMAGE}:test-ecr" - \
        < <(echo -e 'FROM busybox:latest\nMAINTAINER "test ecr maint\nCMD [ "/bin/sh", "-c", "echo ok-output" ]') > /tmp/docker.debug.log 2>&1
 
-@test "Amazon ECR push should work" {
-    (awsecr_push_image "${DOCKER_IMAGE}:test-ecr")
+@test "Amazon ECR push with invalid secrets should fail" {
+    ! (AWS_ACCESS_KEY_ID=adfkjahhs awsecr_push_image "${DOCKER_IMAGE}:test-ecr")
+    ! (AWS_SECRET_ACCESS_KEY=adfkjahhs awsecr_push_image "${DOCKER_IMAGE}:test-ecr")
 }
 
-@test "Amazon ECR push with invalid secrets should fail" {
-    (
-        export AWS_ACCESS_KEY_ID=adfkjahhs
-        ! (awsecr_push_image "${DOCKER_IMAGE}:test-ecr")
-    )
-    (
-        export AWS_ACCESS_SECRET_KEY=adfkjahhs
-        ! (awsecr_push_image "${DOCKER_IMAGE}:test-ecr")
-    )
+@test "Amazon ECR push should work" {
+    (awsecr_push_image "${DOCKER_IMAGE}:test-ecr")
 }
 
 @test "Amazon ECR push w/ non-existent local image should fail" {
