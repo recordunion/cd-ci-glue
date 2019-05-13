@@ -50,9 +50,9 @@ _dockerhub_ensure_environment() {
 ## @brief Login to Amazon Elastic Container Registry. (ECR)
 ##
 ## @par Environment variables
-##  @b AWS_ACCESS_KEY_ID @n
-##  @b AWS_SECRET_ACCESS_KEY @n
-##  @b AWS_DEFAULT_REGION @n
+##  @b AWS_ACCESS_KEY_ID AWS Access key associated with an IAM user or role.@n
+##  @b AWS_SECRET_ACCESS_KEY Secret key associated with the access key.@n
+##  @b AWS_DEFAULT_REGION AWS Region to send the request to.@n
 ##
 ## @details    Outputs     the    repository    URL     to    standard
 ## out. (E.g. `https://<aws_account_id>.dkr.ecr.<region>.amazonaws.com`)
@@ -81,9 +81,9 @@ awsecr_login() {
 ## @param image Image identifier (e.g. `madworx/docshell:3.14`)
 ##
 ## @par Environment variables
-##  @b AWS_ACCESS_KEY_ID @n
-##  @b AWS_SECRET_ACCESS_KEY @n
-##  @b AWS_DEFAULT_REGION @n
+##  @b AWS_ACCESS_KEY_ID AWS Access key associated with an IAM user or role.@n
+##  @b AWS_SECRET_ACCESS_KEY Secret key associated with the access key.@n
+##  @b AWS_DEFAULT_REGION AWS Region to send the request to.@n
 ##
 ## @details This  function will as  a side-effect tag the  local image
 ## with the ECR remote registry URL prefix.
@@ -270,6 +270,8 @@ github_doc_commit() {
 ## @fn github_releases_get_latest()
 ##
 ## @brief Returns the latest tagged version on the given repository.
+##
+## @param Github repository. (E.g. `madworx/docker-minix`)
 ##
 ## @par Environment variables
 ##  @b GH_TOKEN Only required if querying a private repository. @n
