@@ -5,7 +5,7 @@ test:
 	bats test/*.bats
 
 coverage:
-	bashcov --root ./src $$(which bats) ./test/*
+	bashcov --root ./src $$(which bats) ./test/*.bats
 
 docs:
 	rm -rf docs 2>/dev/null || true

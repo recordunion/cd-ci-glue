@@ -10,6 +10,10 @@ FROM scratch
 MAINTAINER "dummy"
 EOF
 
+@test "DockerHub push without docker utility should fail" {
+    !(PATH="" dockerhub_push_image "${DOCKER_IMAGE}:test-ecr")
+}
+
 @test "DockerHub down should fail" {
     _DOCKERHUB_URL="http://localhost"
     run dockerhub_set_description "${DOCKER_IMAGE}" <(echo "Last tested: $(date)")
@@ -34,6 +38,11 @@ EOF
 
 @test "DockerHub description update should work" {
     (dockerhub_set_description "${DOCKER_IMAGE}" <(echo "cd-ci-glue last tested: $(date)"))
+}
+
+@test "DockerHub description with missing arguments should fail" {
+    ! (dockerhub_set_description)
+    ! (dockerhub_set_description "${DOCKER_IMAGE}")
 }
 
 @test "DockerHub description with non-existent file should fail" {

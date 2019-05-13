@@ -9,14 +9,35 @@
 
 _aws_ensure_environment() {
     if [[ -v AWS_ACCESS_KEY_ID ]] && [[ -v AWS_SECRET_ACCESS_KEY ]] && [[ -v AWS_DEFAULT_REGION ]] ; then
-        # validate tool exist.
-        type aws >/dev/null 2>&1 || (
+        # validate tool(s) exist.
+        if ! type aws >/dev/null 2>&1 ; then
             echo "FATAL: 'aws' command not found. Please install 'awscli' package." 1>&2
             exit 1
-        )
+        fi
+        _docker_ensure_cli
     else
         echo "FATAL: AWScli environment variables \$AWS_ACCESS_KEY_ID, \$AWS_SECRET_ACCESS_KEY" 1>&2
         echo "or \$AWS_DEFAULT_REGION not set. Aborting." 1>&2
+        echo "" 1>&2
+        exit 1
+    fi
+}
+
+
+_docker_ensure_cli() {
+    if ! type docker >/dev/null 2>&1 ; then
+        echo "FATAL: 'docker' command not found. Please install docker engine/cli." 1>&2
+        exit 1
+    fi
+}
+
+
+_dockerhub_ensure_environment() {
+    if [[ -v DOCKER_USERNAME ]] && [[ -v DOCKER_PASSWORD ]] ; then
+        _docker_ensure_cli
+    else
+        echo "FATAL: Docker hub username/password environment variables " 1>&2
+        echo "       DOCKER_USERNAME and/or DOCKER_PASSWORD not set. Aborting." 1>&2
         echo "" 1>&2
         exit 1
     fi
@@ -55,7 +76,7 @@ awsecr_login() {
 ##
 ## @fn awsecr_push_image()
 ##
-## Push a locally built docker image to Amazon ECR.
+## @brief Push a locally built docker image to Amazon ECR.
 ##
 ## @param image Image identifier (e.g. `madworx/docshell:3.14`)
 ##
@@ -79,21 +100,6 @@ awsecr_push_image() {
     docker tag "${1}" "${FULL_PATH}" || exit 1
     docker push "${FULL_PATH}" > /dev/null || exit 1
     echo "${FULL_PATH}"
-}
-
-
-_dockerhub_ensure_environment() {
-    if [[ -v DOCKER_USERNAME ]] && [[ -v DOCKER_PASSWORD ]] ; then
-        type docker >/dev/null 2>&1 || (
-            echo "FATAL: 'docker' command not found. Please install docker engine/cli." 1>&2
-            exit 1
-        )
-    else
-        echo "FATAL: Docker hub username/password environment variables " 1>&2
-        echo "       DOCKER_USERNAME and/or DOCKER_PASSWORD not set. Aborting." 1>&2
-        echo "" 1>&2
-        exit 1
-    fi
 }
 
 
