@@ -6,6 +6,7 @@
 ## https://github.com/madworx/cd-ci-glue @n
 ##
 
+# Private functions - do not invoke directly!
 
 _aws_ensure_environment() {
     if [[ -v AWS_ACCESS_KEY_ID ]] && [[ -v AWS_SECRET_ACCESS_KEY ]] && [[ -v AWS_DEFAULT_REGION ]] ; then
@@ -44,6 +45,40 @@ _dockerhub_ensure_environment() {
 }
 
 
+#
+# Argument: $1 = repository name. e.g. madworx/docshell.
+# Argument: $2 = branch name (optional)
+#
+_github_doc_prepare() {    
+    if [[ ! -v GH_TOKEN ]] ; then
+        echo "FATAL: Github token environment variable GH_TOKEN not set." 1>&2
+        echo "       Aborting." 1>&2
+        echo "" 1>&2
+        exit 1
+    fi
+    
+    if [[ -z "$1" ]] ; then
+        echo "FATAL: Argument 1 (repository name, e.g. madworx/docshell) not set." 1>&2
+        echo "       Aborting." 1>&2
+        echo "" 1>&2
+        exit 1
+    fi
+
+    REPO="https://${GH_TOKEN}@github.com/$1"
+    
+    TMPDR="$(mktemp -d)"
+    git clone -q "${REPO}" "${TMPDR}" || exit 1
+    pushd "${TMPDR}" >/dev/null || exit 1
+    git config --local user.email "support@travis-ci.org"
+    git config --local user.name  "Travis CI"
+    if [ ! -z "$2" ] ; then
+        git checkout "$2" >/dev/null 2>&1 || exit 1
+    fi
+    popd >/dev/null || exit 1
+    echo "${TMPDR}"
+}
+
+
 ##
 ## @fn awsecr_login()
 ##
@@ -54,8 +89,8 @@ _dockerhub_ensure_environment() {
 ##  @b AWS_SECRET_ACCESS_KEY Secret key associated with the access key.@n
 ##  @b AWS_DEFAULT_REGION AWS Region to send the request to.@n
 ##
-## @details    Outputs     the    repository    URL     to    standard
-## out. (E.g. `https://<aws_account_id>.dkr.ecr.<region>.amazonaws.com`)
+## @details       Outputs       the      repository       URL       to
+## `stdout`. (E.g. `https://<aws_account_id>.dkr.ecr.<region>.amazonaws.com`)
 ##
 ## @par Example
 ## `$ REGISTRY_URL="$(awsecr_login)" || exit 1` @n
@@ -86,7 +121,11 @@ awsecr_login() {
 ##  @b AWS_DEFAULT_REGION AWS Region to send the request to.@n
 ##
 ## @details This  function will as  a side-effect tag the  local image
-## with the ECR remote registry URL prefix.
+## with the ECR  remote registry URL prefix. Will  output the complete
+## path to the pushed image onto `stdout`.
+## (E.g. 863710587213.dkr.ecr.eu-north-1.amazonaws.com/madworx/docker-netbsd:8.0)
+##
+## @par (You do not need to call `awsecr_login()` before calling this function.)
 ##
 ## @par Example
 ## `$ docker build -t madworx/sample:1.0.1 .` @n
@@ -189,40 +228,6 @@ dockerhub_set_description() {
 }
 
 
-#
-# Argument: $1 = repository name. e.g. madworx/docshell.
-# Argument: $2 = branch name (optional)
-#
-_github_doc_prepare() {    
-    if [[ ! -v GH_TOKEN ]] ; then
-        echo "FATAL: Github token environment variable GH_TOKEN not set." 1>&2
-        echo "       Aborting." 1>&2
-        echo "" 1>&2
-        exit 1
-    fi
-    
-    if [[ -z "$1" ]] ; then
-        echo "FATAL: Argument 1 (repository name, e.g. madworx/docshell) not set." 1>&2
-        echo "       Aborting." 1>&2
-        echo "" 1>&2
-        exit 1
-    fi
-
-    REPO="https://${GH_TOKEN}@github.com/$1"
-    
-    TMPDR="$(mktemp -d)"
-    git clone -q "${REPO}" "${TMPDR}" || exit 1
-    pushd "${TMPDR}" >/dev/null || exit 1
-    git config --local user.email "support@travis-ci.org"
-    git config --local user.name  "Travis CI"
-    if [ ! -z "$2" ] ; then
-        git checkout "$2" >/dev/null 2>&1 || exit 1
-    fi
-    popd >/dev/null || exit 1
-    echo "${TMPDR}"
-}
-
-
 ##
 ## @fn github_pages_prepare()
 ##
@@ -247,7 +252,7 @@ github_pages_prepare() {
 ## @brief Commit previously prepared documentation
 ##
 ## @param dir Temporary directory returned from previous invocation of
-##              `github_(pages/wiki)_prepare()`.
+##              `github_(pages|wiki)_prepare()`.
 ##
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
@@ -271,7 +276,7 @@ github_doc_commit() {
 ##
 ## @brief Returns the latest tagged version on the given repository.
 ##
-## @param Github repository. (E.g. `madworx/docker-minix`)
+## @param repository Github repository. (E.g. `madworx/docker-minix`)
 ##
 ## @par Environment variables
 ##  @b GH_TOKEN Only required if querying a private repository. @n
@@ -296,10 +301,11 @@ github_releases_get_latest() {
 ##
 ## @brief Commit previously prepared wiki directory.
 ##
-## @deprecated This function is deprecated. Use the generic `github_doc_commit` function instead.
+## @deprecated  This   function  is   deprecated.   Use   the  generic
+## `github_doc_commit()` function instead.
 ##
 ## @param dir Temporary directory  returned  from  previous call  to
-##            github_(pages/wiki)_prepare().
+##            `github_(pages|wiki)_prepare()`.
 ##
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
@@ -319,8 +325,8 @@ github_wiki_commit() {
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
 ##
-## @details Outputs the temporary directory name you're supposed to put the Wiki
-## files into.
+## @details Outputs  the temporary  directory name you're  supposed to
+## put the Wiki files into to `stdout`.
 ##
 github_wiki_prepare() {
     TMPDR=$(_github_doc_prepare "${1}.wiki.git") || exit 1
@@ -339,8 +345,10 @@ github_wiki_prepare() {
 ## @param branch Branch name to compare to
 ##
 ## @par Environment variables
-##  @b TRAVIS_EVENT_TYPE Variable set by Travis CI during build-time, indicating event type. @n
-##  @b TRAVIS_BRANCH Variable set by Travis CI during build-time, indicating which branch we're on. @n
+##  @b TRAVIS_EVENT_TYPE Variable set  by Travis CI during build-time,
+##  indicating event type. @n
+##  @b  TRAVIS_BRANCH Variable  set  by Travis  CI during  build-time,
+##  indicating which branch we're on. @n
 ##
 ## @details Return a zero status code if this is refering to a push on
 ## the branch given  as argument.  If any of  the required environment
@@ -366,11 +374,14 @@ is_travis_branch_push() {
 ##
 ## @fn is_travis_master_push()
 ##
-## @brief Check if invoked from Travis CI due to push on `master` branch.
+## @brief Check  if invoked  from Travis  CI due  to push  on `master`
+## branch.
 ##
 ## @par Environment variables
-##  @b TRAVIS_EVENT_TYPE Variable set by Travis CI during build-time, indicating event type. @n
-##  @b TRAVIS_BRANCH Variable set by Travis CI during build-time, indicating which branch we're on. @n
+##  @b TRAVIS_EVENT_TYPE Variable set  by Travis CI during build-time,
+##  indicating event type. @n
+##  @b  TRAVIS_BRANCH Variable  set  by Travis  CI during  build-time,
+##  indicating which branch we're on. @n
 ##
 ## @details Return a  zero status code if this is  referring to a push
 ## to the `master` branch.
