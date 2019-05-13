@@ -246,7 +246,7 @@ github_pages_prepare() {
 ##
 ## @brief Commit previously prepared documentation
 ##
-## @param  dir  Temporary directory  returned  from  previous call  to
+## @param dir Temporary directory returned from previous invocation of
 ##              `github_(pages/wiki)_prepare()`.
 ##
 ## @par Environment variables
@@ -342,10 +342,10 @@ github_wiki_prepare() {
 ##  @b TRAVIS_EVENT_TYPE Variable set by Travis CI during build-time, indicating event type. @n
 ##  @b TRAVIS_BRANCH Variable set by Travis CI during build-time, indicating which branch we're on. @n
 ##
-## @details Return a zero status code if  this is refering to a push on
-## the branch  given as argument.  If any of the  required environment
+## @details Return a zero status code if this is refering to a push on
+## the branch given  as argument.  If any of  the required environment
 ## variables  are missing,  will  emit error  message  on stderr,  but
-## containue anyway  and assume that this  is not a push  event on the
+## continue anyway  and assume that  this is not  a push event  on the
 ## desired branch.
 ##
 is_travis_branch_push() {   
