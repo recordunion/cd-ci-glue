@@ -25,13 +25,16 @@ _aws_ensure_environment() {
 
 ##
 ## @fn awsecr_login()
+##
+## @brief Login to Amazon Elastic Container Registry. (ECR)
+##
 ## @par Environment variables
 ##  @b AWS_ACCESS_KEY_ID @n
 ##  @b AWS_SECRET_ACCESS_KEY @n
 ##  @b AWS_DEFAULT_REGION @n
 ##
-## Login to Amazon Elastic Container Registry. (ECR)
-## Outputs the repository URL to standard out. (E.g. `https://<aws_account_id>.dkr.ecr.<region>.amazonaws.com`)
+## @details    Outputs     the    repository    URL     to    standard
+## out. (E.g. `https://<aws_account_id>.dkr.ecr.<region>.amazonaws.com`)
 ##
 ## @par Example
 ## `$ REGISTRY_URL="$(awsecr_login)" || exit 1` @n
@@ -48,17 +51,21 @@ awsecr_login() {
     echo "${REGISTRY_PATH}"
 }
 
+
 ##
 ## @fn awsecr_push_image()
+##
+## Push a locally built docker image to Amazon ECR.
+##
 ## @param image Image identifier (e.g. `madworx/docshell:3.14`)
+##
 ## @par Environment variables
 ##  @b AWS_ACCESS_KEY_ID @n
 ##  @b AWS_SECRET_ACCESS_KEY @n
 ##  @b AWS_DEFAULT_REGION @n
 ##
-## Push a locally built docker image to Amazon ECR. This function will
-## as a side-effect  tag the local image with the  ECR remote registry
-## URL prefix.
+## @details This  function will as  a side-effect tag the  local image
+## with the ECR remote registry URL prefix.
 ##
 ## @par Example
 ## `$ docker build -t madworx/sample:1.0.1 .` @n
@@ -73,6 +80,7 @@ awsecr_push_image() {
     docker push "${FULL_PATH}" > /dev/null || exit 1
     echo "${FULL_PATH}"
 }
+
 
 _dockerhub_ensure_environment() {
     if [[ -v DOCKER_USERNAME ]] && [[ -v DOCKER_PASSWORD ]] ; then
@@ -91,13 +99,16 @@ _dockerhub_ensure_environment() {
 
 ##
 ## @fn dockerhub_push_image()
+##
 ## @brief Push image to Docker Hub
+##
 ## @param image Image to push. (e.g. `madworx/debian-archive:lenny`)
+##
 ## @par Environment variables
 ##  @b DOCKER_USERNAME Valid username for Docker Hub. @n
 ##  @b DOCKER_PASSWORD Valid password for Docker Hub. @n
 ##
-## @details Push a  docker image from the local machine  to the Docker
+## @details Pushes a docker image from the local machine to the Docker
 ## Hub  repository,  logging  in   using  the  `$DOCKER_USERNAME`  and
 ## `$DOCKER_PASSWORD` environment  variables. You need to  have tagged
 ## this image beforehand. (i.e. `docker tag`)
@@ -117,8 +128,12 @@ dockerhub_push_image() {
 
 ##
 ## @fn dockerhub_set_description()
+##
+## @brief Set the image description on DockerHub.
+##
 ## @param repository Repository name; e.g. `madworx/docshell`.
 ## @param filename Filename/path containing description; e.g. `README.md`.
+##
 ## @par Environment variables
 ##  @b DOCKER_USERNAME Valid username for Docker Hub. @n
 ##  @b DOCKER_PASSWORD Valid password for Docker Hub. @n
@@ -201,13 +216,19 @@ _github_doc_prepare() {
     echo "${TMPDR}"
 }
 
+
 ##
 ## @fn github_pages_prepare()
+##
+## @brief Prepare a local directory for working with GitHub pages
+##
 ## @param repository Name of GitHub repository; e.g. `madworx/docshell`.
+##
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
 ##
-## @details Outputs the temporary directory of the gh-pages branch.
+## @details Checks out the provided repositorys `gh-pages` branch in a
+## temporary directory. Outputs the temporary directory on `stdout`.
 ##
 github_pages_prepare() {
     _github_doc_prepare "${1}" "gh-pages" || exit 1
@@ -216,11 +237,14 @@ github_pages_prepare() {
 
 ##
 ## @fn github_doc_commit()
-## @param dir Temporary directory  returned  from  previous call  to
-##            github_(pages/wiki)_prepare().
+##
+## @brief Commit previously prepared documentation
+##
+## @param  dir  Temporary directory  returned  from  previous call  to
+##              `github_(pages/wiki)_prepare()`.
+##
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
-## @details Commit previously prepared documentation
 ##
 github_doc_commit() {
     if [[ -z "$1" ]] ; then
@@ -238,12 +262,13 @@ github_doc_commit() {
 
 ##
 ## @fn github_releases_get_latest()
+##
+## @brief Returns the latest tagged version on the given repository.
+##
 ## @par Environment variables
 ##  @b GH_TOKEN Only required if querying a private repository. @n
 ##
-## Returns the latest tagged version on the given repository.
-##
-## @par @b Please note: @n
+## @details @par @b Please note: @n
 ## There  is  a discrepancy  between  the  GitHub "Releases  API"  vs.
 ## what's  displayed on  the GitHub  web page.  Releases displayed  as
 ## "releases" on  the GitHub web  page is not  necessarily "releases",
@@ -260,13 +285,16 @@ github_releases_get_latest() {
 
 ##
 ## @fn github_wiki_commit()
+##
+## @brief Commit previously prepared wiki directory.
+##
 ## @deprecated This function is deprecated. Use the generic `github_doc_commit` function instead.
+##
 ## @param dir Temporary directory  returned  from  previous call  to
 ##            github_(pages/wiki)_prepare().
+##
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
-##
-## Commit previously prepared wiki directory.
 ##
 github_wiki_commit() {
     github_doc_commit "$1"
@@ -275,7 +303,11 @@ github_wiki_commit() {
 
 ##
 ## @fn github_wiki_prepare()
+##
+## @brief Prepare a local directory for working with GitHub Wiki repo.
+##
 ## @param repository Name of GitHub repository; e.g. `madworx/docshell`.
+##
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
 ##
@@ -293,8 +325,11 @@ github_wiki_prepare() {
 
 ##
 ## @fn is_travis_branch_push()
+##
 ## @brief Check if invoked from Travis CI on specific branch.
+##
 ## @param branch Branch name to compare to
+##
 ## @par Environment variables
 ##  @b TRAVIS_EVENT_TYPE Variable set by Travis CI during build-time, indicating event type. @n
 ##  @b TRAVIS_BRANCH Variable set by Travis CI during build-time, indicating which branch we're on. @n
@@ -322,12 +357,15 @@ is_travis_branch_push() {
 
 ##
 ## @fn is_travis_master_push()
+##
+## @brief Check if invoked from Travis CI due to push on `master` branch.
+##
 ## @par Environment variables
 ##  @b TRAVIS_EVENT_TYPE Variable set by Travis CI during build-time, indicating event type. @n
 ##  @b TRAVIS_BRANCH Variable set by Travis CI during build-time, indicating which branch we're on. @n
 ##
 ## @details Return a  zero status code if this is  referring to a push
-## to the 'master' branch.
+## to the `master` branch.
 ##
 is_travis_master_push() {
     is_travis_branch_push master
