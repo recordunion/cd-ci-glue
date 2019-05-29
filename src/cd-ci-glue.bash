@@ -85,15 +85,15 @@ _github_doc_prepare() {
 ## @brief Login to Amazon Elastic Container Registry. (ECR)
 ##
 ## @par Environment variables
-##  @b AWS_ACCESS_KEY_ID AWS Access key associated with an IAM user or role.@n
-##  @b AWS_SECRET_ACCESS_KEY Secret key associated with the access key.@n
-##  @b AWS_DEFAULT_REGION AWS Region to send the request to.@n
+##  @b AWS_ACCESS_KEY_ID Specifies an AWS access key associated with an IAM user or role. @n
+##  @b AWS_SECRET_ACCESS_KEY Specifies the secret key associated with the access key. @n
+##  @b AWS_DEFAULT_REGION Specifies the AWS Region to send the request to. @n
 ##
 ## @details       Outputs       the      repository       URL       to
 ## `stdout`. (E.g. `https://<aws_account_id>.dkr.ecr.<region>.amazonaws.com`)
 ##
 ## @par Example
-## `$ REGISTRY_URL="$(awsecr_login)" || exit 1` @n
+## `$ export REGISTRY_URL="$(awsecr_login)" || exit 1` @n
 ## `$ docker run "${REGISTRY_URL}/madworx/robotframework-kicadlibrary"` @n
 ##
 awsecr_login() {
@@ -116,9 +116,9 @@ awsecr_login() {
 ## @param image Image identifier (e.g. `madworx/docshell:3.14`)
 ##
 ## @par Environment variables
-##  @b AWS_ACCESS_KEY_ID AWS Access key associated with an IAM user or role.@n
-##  @b AWS_SECRET_ACCESS_KEY Secret key associated with the access key.@n
-##  @b AWS_DEFAULT_REGION AWS Region to send the request to.@n
+##  @b AWS_ACCESS_KEY_ID Specifies an AWS access key associated with an IAM user or role. @n
+##  @b AWS_SECRET_ACCESS_KEY Specifies the secret key associated with the access key. @n
+##  @b AWS_DEFAULT_REGION Specifies the AWS Region to send the request to. @n
 ##
 ## @details This  function will as  a side-effect tag the  local image
 ## with the ECR  remote registry URL prefix. Will  output the complete
@@ -238,7 +238,7 @@ dockerhub_set_description() {
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
 ##
-## @details Checks out the provided repositorys `gh-pages` branch in a
+## @details Checks out  the given repository's `gh-pages`  branch in a
 ## temporary directory. Outputs the temporary directory on `stdout`.
 ##
 github_pages_prepare() {
@@ -340,7 +340,7 @@ github_wiki_prepare() {
 ##
 ## @fn is_travis_branch_push()
 ##
-## @brief Check if invoked from Travis CI on specific branch.
+## @brief Check if invoked from Travis CI due to a push event on a specific branch.
 ##
 ## @param branch Branch name to compare to
 ##
@@ -353,8 +353,17 @@ github_wiki_prepare() {
 ## @details Return a zero status code if this is refering to a push on
 ## the branch given  as argument.  If any of  the required environment
 ## variables  are missing,  will  emit error  message  on stderr,  but
-## continue anyway  and assume that  this is not  a push event  on the
-## desired branch.
+## containue anyway  and assume that this  is not a push  event on the
+## desired  branch. Please  note  that this  might  break your  script
+## execution  if  running  with  `-o pipefail`  and/or  `set  -eE`.  A
+## work-around for that fact is describe below in the example section.
+##
+## @par Example
+## `# Below will fail on -opipefail, -eE etc.`
+## `$ is_travis_branch_push devel && dockerhub_push_image madworx/qemu:dev` @n
+##
+## `# Below is a work-around for above behaviour.`
+## `$ ! is_travis_branch_push devel && true || dockerhub_push_image madworx/qemu:dev` @n
 ##
 is_travis_branch_push() {   
     if [[ ! -v TRAVIS_EVENT_TYPE ]] ; then
@@ -385,6 +394,13 @@ is_travis_branch_push() {
 ##
 ## @details Return a  zero status code if this is  referring to a push
 ## to the `master` branch.
+##
+## @par Example
+## `# Below will fail on -opipefail, -eE etc.`
+## `$ is_travis_master_push && dockerhub_push_image madworx/qemu` @n
+##
+## `# Below is a work-around for above behaviour.`
+## `$ ! is_travis_master_push && true || dockerhub_push_image madworx/qemu` @n
 ##
 is_travis_master_push() {
     is_travis_branch_push master

@@ -28,6 +28,3 @@ after_success:
   - cp -a src/coverage -t "${GHDIR}/"
   - is_travis_master_push && github_doc_commit "${GHDIR}"
 
-after_failure:
-  - cat /tmp/call.log
-
