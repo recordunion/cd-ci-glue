@@ -120,7 +120,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a635535913bb417dc82541522258f1a95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare a local directory for working with GitHub Wiki repo.  <a href="#a635535913bb417dc82541522258f1a95">More...</a><br/></td></tr>
 <tr class="separator:a635535913bb417dc82541522258f1a95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad017448657e3c20940e5c30cadd02804"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cd-ci-glue_8bash.html#ad017448657e3c20940e5c30cadd02804">is_travis_branch_push</a> (branch)</td></tr>
-<tr class="memdesc:ad017448657e3c20940e5c30cadd02804"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if invoked from Travis CI on specific branch.  <a href="#ad017448657e3c20940e5c30cadd02804">More...</a><br/></td></tr>
+<tr class="memdesc:ad017448657e3c20940e5c30cadd02804"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if invoked from Travis CI due to a push event on a specific branch.  <a href="#ad017448657e3c20940e5c30cadd02804">More...</a><br/></td></tr>
 <tr class="separator:ad017448657e3c20940e5c30cadd02804"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a327598396a1b40c158f4c83c104dde9d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cd-ci-glue_8bash.html#a327598396a1b40c158f4c83c104dde9d">is_travis_master_push</a> ()</td></tr>
 <tr class="memdesc:a327598396a1b40c158f4c83c104dde9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if invoked from Travis CI due to push on <code>master</code> branch.  <a href="#a327598396a1b40c158f4c83c104dde9d">More...</a><br/></td></tr>
@@ -145,12 +145,12 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Login to Amazon Elastic Container Registry. (ECR) </p>
-<dl class="section user"><dt>Environment variables</dt><dd><b>AWS_ACCESS_KEY_ID</b> AWS Access key associated with an IAM user or role.<br/>
- <b>AWS_SECRET_ACCESS_KEY</b> Secret key associated with the access key.<br/>
- <b>AWS_DEFAULT_REGION</b> AWS Region to send the request to.<br/>
+<dl class="section user"><dt>Environment variables</dt><dd><b>AWS_ACCESS_KEY_ID</b> Specifies an AWS access key associated with an IAM user or role. <br/>
+ <b>AWS_SECRET_ACCESS_KEY</b> Specifies the secret key associated with the access key. <br/>
+ <b>AWS_DEFAULT_REGION</b> Specifies the AWS Region to send the request to. <br/>
 </dd></dl>
 <p>Outputs the repository URL to <code>stdout</code>. (E.g. <code><a href="https://">https://</a>&lt;aws_account_id&gt;.dkr.ecr.&lt;region&gt;.amazonaws.com</code>)</p>
-<dl class="section user"><dt>Example</dt><dd><code>$ REGISTRY_URL="$(awsecr_login)" || exit 1</code> <br/>
+<dl class="section user"><dt>Example</dt><dd><code>$ export REGISTRY_URL="$(awsecr_login)" || exit 1</code> <br/>
 <code>$ docker run "${REGISTRY_URL}/madworx/robotframework-kicadlibrary"</code> <br/>
 </dd></dl>
 
@@ -177,9 +177,9 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section user"><dt>Environment variables</dt><dd><b>AWS_ACCESS_KEY_ID</b> AWS Access key associated with an IAM user or role.<br/>
- <b>AWS_SECRET_ACCESS_KEY</b> Secret key associated with the access key.<br/>
- <b>AWS_DEFAULT_REGION</b> AWS Region to send the request to.<br/>
+<dl class="section user"><dt>Environment variables</dt><dd><b>AWS_ACCESS_KEY_ID</b> Specifies an AWS access key associated with an IAM user or role. <br/>
+ <b>AWS_SECRET_ACCESS_KEY</b> Specifies the secret key associated with the access key. <br/>
+ <b>AWS_DEFAULT_REGION</b> Specifies the AWS Region to send the request to. <br/>
 </dd></dl>
 <p>This function will as a side-effect tag the local image with the ECR remote registry URL prefix. Will output the complete path to the pushed image onto <code>stdout</code>. (E.g. 863710587213.dkr.ecr.eu-north-1.amazonaws.com/madworx/docker-netbsd:8.0)</p>
 <dl class="section user"><dt>(You do not need to call awsecr_login() before calling this function.)</dt><dd></dd></dl>
@@ -313,7 +313,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section user"><dt>Environment variables</dt><dd><b>GH_TOKEN</b> Valid GitHub personal access token. <br/>
 </dd></dl>
-<p>Checks out the provided repositorys <code>gh-pages</code> branch in a temporary directory. Outputs the temporary directory on <code>stdout</code>. </p>
+<p>Checks out the given repository's <code>gh-pages</code> branch in a temporary directory. Outputs the temporary directory on <code>stdout</code>. </p>
 
 </div>
 </div>
@@ -412,7 +412,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Check if invoked from Travis CI on specific branch. </p>
+<p>Check if invoked from Travis CI due to a push event on a specific branch. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">branch</td><td>Branch name to compare to</td></tr>
@@ -422,7 +422,10 @@ Functions</h2></td></tr>
 <dl class="section user"><dt>Environment variables</dt><dd><b>TRAVIS_EVENT_TYPE</b> Variable set by Travis CI during build-time, indicating event type. <br/>
  <b>TRAVIS_BRANCH</b> Variable set by Travis CI during build-time, indicating which branch we're on. <br/>
 </dd></dl>
-<p>Return a zero status code if this is refering to a push on the branch given as argument. If any of the required environment variables are missing, will emit error message on stderr, but continue anyway and assume that this is not a push event on the desired branch. </p>
+<p>Return a zero status code if this is refering to a push on the branch given as argument. If any of the required environment variables are missing, will emit error message on stderr, but containue anyway and assume that this is not a push event on the desired branch. Please note that this might break your script execution if running with <code>-o pipefail</code> and/or <code>set -eE</code>. A work-around for that fact is describe below in the example section.</p>
+<dl class="section user"><dt>Example</dt><dd><code># Below will fail on -opipefail, -eE etc.</code> <code>$ is_travis_branch_push devel &amp;&amp; dockerhub_push_image madworx/qemu:dev</code> <br/>
+ <code># Below is a work-around for above behaviour.</code> <code>$ ! is_travis_branch_push devel &amp;&amp; true || dockerhub_push_image madworx/qemu:dev</code> <br/>
+</dd></dl>
 
 </div>
 </div>
@@ -443,14 +446,17 @@ Functions</h2></td></tr>
 <dl class="section user"><dt>Environment variables</dt><dd><b>TRAVIS_EVENT_TYPE</b> Variable set by Travis CI during build-time, indicating event type. <br/>
  <b>TRAVIS_BRANCH</b> Variable set by Travis CI during build-time, indicating which branch we're on. <br/>
 </dd></dl>
-<p>Return a zero status code if this is referring to a push to the <code>master</code> branch. </p>
+<p>Return a zero status code if this is referring to a push to the <code>master</code> branch.</p>
+<dl class="section user"><dt>Example</dt><dd><code># Below will fail on -opipefail, -eE etc.</code> <code>$ is_travis_master_push &amp;&amp; dockerhub_push_image madworx/qemu</code> <br/>
+ <code># Below is a work-around for above behaviour.</code> <code>$ ! is_travis_master_push &amp;&amp; true || dockerhub_push_image madworx/qemu</code> <br/>
+</dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 13 2019 19:56:44 for cd-ci-glue by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 29 2019 17:46:30 for cd-ci-glue by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

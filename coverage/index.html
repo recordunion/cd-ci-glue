@@ -14,7 +14,7 @@
       <img src="./assets/0.10.2/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" style="display:none;">
-      <div class="timestamp">Generated <abbr class="timeago" title="2019-05-13T19:56:44+00:00">2019-05-13T19:56:44+00:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2019-05-29T17:46:30+00:00">2019-05-29T17:46:30+00:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -53,7 +53,7 @@
       <tr>
         <td class="strong"><a href="#a765f1c142591cc3fc40825276b3c7d65fb3c9d7" class="src_link" title="cd-ci-glue.bash">cd-ci-glue.bash</a></td>
         <td class="green strong">100.0 %</td>
-        <td>391</td>
+        <td>407</td>
         <td>127</td>
         <td>127</td>
         <td>0</td>
@@ -615,19 +615,19 @@
         <li class="never" data-hits="" data-linenumber="88">
           
           
-          <code class="ruby">##  @b AWS_ACCESS_KEY_ID AWS Access key associated with an IAM user or role.@n</code>
+          <code class="ruby">##  @b AWS_ACCESS_KEY_ID Specifies an AWS access key associated with an IAM user or role. @n</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="89">
           
           
-          <code class="ruby">##  @b AWS_SECRET_ACCESS_KEY Secret key associated with the access key.@n</code>
+          <code class="ruby">##  @b AWS_SECRET_ACCESS_KEY Specifies the secret key associated with the access key. @n</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="90">
           
           
-          <code class="ruby">##  @b AWS_DEFAULT_REGION AWS Region to send the request to.@n</code>
+          <code class="ruby">##  @b AWS_DEFAULT_REGION Specifies the AWS Region to send the request to. @n</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="91">
@@ -663,7 +663,7 @@
         <li class="never" data-hits="" data-linenumber="96">
           
           
-          <code class="ruby">## `$ REGISTRY_URL=&quot;$(awsecr_login)&quot; || exit 1` @n</code>
+          <code class="ruby">## `$ export REGISTRY_URL=&quot;$(awsecr_login)&quot; || exit 1` @n</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="97">
@@ -801,19 +801,19 @@
         <li class="never" data-hits="" data-linenumber="119">
           
           
-          <code class="ruby">##  @b AWS_ACCESS_KEY_ID AWS Access key associated with an IAM user or role.@n</code>
+          <code class="ruby">##  @b AWS_ACCESS_KEY_ID Specifies an AWS access key associated with an IAM user or role. @n</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="120">
           
           
-          <code class="ruby">##  @b AWS_SECRET_ACCESS_KEY Secret key associated with the access key.@n</code>
+          <code class="ruby">##  @b AWS_SECRET_ACCESS_KEY Specifies the secret key associated with the access key. @n</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="121">
           
           
-          <code class="ruby">##  @b AWS_DEFAULT_REGION AWS Region to send the request to.@n</code>
+          <code class="ruby">##  @b AWS_DEFAULT_REGION Specifies the AWS Region to send the request to. @n</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="122">
@@ -1533,7 +1533,7 @@
         <li class="never" data-hits="" data-linenumber="241">
           
           
-          <code class="ruby">## @details Checks out the provided repositorys `gh-pages` branch in a</code>
+          <code class="ruby">## @details Checks out  the given repository&#39;s `gh-pages`  branch in a</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="242">
@@ -2145,7 +2145,7 @@
         <li class="never" data-hits="" data-linenumber="343">
           
           
-          <code class="ruby">## @brief Check if invoked from Travis CI on specific branch.</code>
+          <code class="ruby">## @brief Check if invoked from Travis CI due to a push event on a specific branch.</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="344">
@@ -2223,175 +2223,175 @@
         <li class="never" data-hits="" data-linenumber="356">
           
           
-          <code class="ruby">## continue anyway  and assume that  this is not  a push event  on the</code>
+          <code class="ruby">## containue anyway  and assume that this  is not a push  event on the</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="357">
           
           
-          <code class="ruby">## desired branch.</code>
+          <code class="ruby">## desired  branch. Please  note  that this  might  break your  script</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="358">
           
           
+          <code class="ruby">## execution  if  running  with  `-o pipefail`  and/or  `set  -eE`.  A</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="359">
+          
+          
+          <code class="ruby">## work-around for that fact is describe below in the example section.</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="360">
+          
+          
           <code class="ruby">##</code>
         </li>
       
-        <li class="covered" data-hits="10" data-linenumber="359">
-          <span class="hits">10</span>
+        <li class="never" data-hits="" data-linenumber="361">
           
-          <code class="ruby">is_travis_branch_push() {   </code>
+          
+          <code class="ruby">## @par Example</code>
         </li>
       
-        <li class="covered" data-hits="20" data-linenumber="360">
-          <span class="hits">20</span>
+        <li class="never" data-hits="" data-linenumber="362">
           
-          <code class="ruby">    if [[ ! -v TRAVIS_EVENT_TYPE ]] ; then</code>
+          
+          <code class="ruby">## `# Below will fail on -opipefail, -eE etc.`</code>
         </li>
       
-        <li class="covered" data-hits="8" data-linenumber="361">
-          <span class="hits">8</span>
+        <li class="never" data-hits="" data-linenumber="363">
           
-          <code class="ruby">        echo &quot;WARNING: Travis CI environment variable TRAVIS_EVENT_TYPE not set.&quot;    1&gt;&amp;2</code>
-        </li>
-      
-        <li class="covered" data-hits="8" data-linenumber="362">
-          <span class="hits">8</span>
           
-          <code class="ruby">        echo &quot;         Unable to identify if this commit is related to PR or merge.&quot; 1&gt;&amp;2</code>
-        </li>
-      
-        <li class="covered" data-hits="8" data-linenumber="363">
-          <span class="hits">8</span>
-          
-          <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
+          <code class="ruby">## `$ is_travis_branch_push devel &amp;&amp; dockerhub_push_image madworx/qemu:dev` @n</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="364">
           
           
-          <code class="ruby">    fi</code>
+          <code class="ruby">##</code>
         </li>
       
-        <li class="covered" data-hits="20" data-linenumber="365">
+        <li class="never" data-hits="" data-linenumber="365">
+          
+          
+          <code class="ruby">## `# Below is a work-around for above behaviour.`</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="366">
+          
+          
+          <code class="ruby">## `$ ! is_travis_branch_push devel &amp;&amp; true || dockerhub_push_image madworx/qemu:dev` @n</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="367">
+          
+          
+          <code class="ruby">##</code>
+        </li>
+      
+        <li class="covered" data-hits="10" data-linenumber="368">
+          <span class="hits">10</span>
+          
+          <code class="ruby">is_travis_branch_push() {   </code>
+        </li>
+      
+        <li class="covered" data-hits="20" data-linenumber="369">
           <span class="hits">20</span>
           
-          <code class="ruby">    if [[ ! -v TRAVIS_BRANCH ]] ; then</code>
+          <code class="ruby">    if [[ ! -v TRAVIS_EVENT_TYPE ]] ; then</code>
         </li>
       
-        <li class="covered" data-hits="8" data-linenumber="366">
+        <li class="covered" data-hits="8" data-linenumber="370">
           <span class="hits">8</span>
           
-          <code class="ruby">        echo &quot;WARNING: Travis CI environment variable TRAVIS_BRANCH not set.&quot;          1&gt;&amp;2</code>
+          <code class="ruby">        echo &quot;WARNING: Travis CI environment variable TRAVIS_EVENT_TYPE not set.&quot;    1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="8" data-linenumber="367">
+        <li class="covered" data-hits="8" data-linenumber="371">
           <span class="hits">8</span>
           
-          <code class="ruby">        echo &quot;         We&#39;ll assume this isn&#39;t related to a push on the \`$1&#39; branch.&quot; 1&gt;&amp;2</code>
+          <code class="ruby">        echo &quot;         Unable to identify if this commit is related to PR or merge.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="covered" data-hits="8" data-linenumber="368">
+        <li class="covered" data-hits="8" data-linenumber="372">
           <span class="hits">8</span>
           
           <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="369">
+        <li class="never" data-hits="" data-linenumber="373">
           
           
           <code class="ruby">    fi</code>
         </li>
       
-        <li class="covered" data-hits="32" data-linenumber="370">
-          <span class="hits">32</span>
+        <li class="covered" data-hits="20" data-linenumber="374">
+          <span class="hits">20</span>
           
-          <code class="ruby">    [[ &quot;${TRAVIS_EVENT_TYPE}&quot; == &quot;push&quot; ]] &amp;&amp; [[ &quot;${TRAVIS_BRANCH}&quot; == &quot;$1&quot; ]]</code>
+          <code class="ruby">    if [[ ! -v TRAVIS_BRANCH ]] ; then</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="371">
+        <li class="covered" data-hits="8" data-linenumber="375">
+          <span class="hits">8</span>
           
-          
-          <code class="ruby">}</code>
+          <code class="ruby">        echo &quot;WARNING: Travis CI environment variable TRAVIS_BRANCH not set.&quot;          1&gt;&amp;2</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="372">
+        <li class="covered" data-hits="8" data-linenumber="376">
+          <span class="hits">8</span>
           
-          
-          <code class="ruby"></code>
+          <code class="ruby">        echo &quot;         We&#39;ll assume this isn&#39;t related to a push on the \`$1&#39; branch.&quot; 1&gt;&amp;2</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="373">
+        <li class="covered" data-hits="8" data-linenumber="377">
+          <span class="hits">8</span>
           
-          
-          <code class="ruby"></code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="374">
-          
-          
-          <code class="ruby">##</code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="375">
-          
-          
-          <code class="ruby">## @fn is_travis_master_push()</code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="376">
-          
-          
-          <code class="ruby">##</code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="377">
-          
-          
-          <code class="ruby">## @brief Check  if invoked  from Travis  CI due  to push  on `master`</code>
+          <code class="ruby">        echo &quot;&quot; 1&gt;&amp;2</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="378">
           
           
-          <code class="ruby">## branch.</code>
+          <code class="ruby">    fi</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="379">
+        <li class="covered" data-hits="32" data-linenumber="379">
+          <span class="hits">32</span>
           
-          
-          <code class="ruby">##</code>
+          <code class="ruby">    [[ &quot;${TRAVIS_EVENT_TYPE}&quot; == &quot;push&quot; ]] &amp;&amp; [[ &quot;${TRAVIS_BRANCH}&quot; == &quot;$1&quot; ]]</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="380">
           
           
-          <code class="ruby">## @par Environment variables</code>
+          <code class="ruby">}</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="381">
           
           
-          <code class="ruby">##  @b TRAVIS_EVENT_TYPE Variable set  by Travis CI during build-time,</code>
+          <code class="ruby"></code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="382">
           
           
-          <code class="ruby">##  indicating event type. @n</code>
+          <code class="ruby"></code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="383">
           
           
-          <code class="ruby">##  @b  TRAVIS_BRANCH Variable  set  by Travis  CI during  build-time,</code>
+          <code class="ruby">##</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="384">
           
           
-          <code class="ruby">##  indicating which branch we&#39;re on. @n</code>
+          <code class="ruby">## @fn is_travis_master_push()</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="385">
@@ -2403,13 +2403,13 @@
         <li class="never" data-hits="" data-linenumber="386">
           
           
-          <code class="ruby">## @details Return a  zero status code if this is  referring to a push</code>
+          <code class="ruby">## @brief Check  if invoked  from Travis  CI due  to push  on `master`</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="387">
           
           
-          <code class="ruby">## to the `master` branch.</code>
+          <code class="ruby">## branch.</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="388">
@@ -2418,19 +2418,115 @@
           <code class="ruby">##</code>
         </li>
       
-        <li class="covered" data-hits="5" data-linenumber="389">
+        <li class="never" data-hits="" data-linenumber="389">
+          
+          
+          <code class="ruby">## @par Environment variables</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="390">
+          
+          
+          <code class="ruby">##  @b TRAVIS_EVENT_TYPE Variable set  by Travis CI during build-time,</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="391">
+          
+          
+          <code class="ruby">##  indicating event type. @n</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="392">
+          
+          
+          <code class="ruby">##  @b  TRAVIS_BRANCH Variable  set  by Travis  CI during  build-time,</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="393">
+          
+          
+          <code class="ruby">##  indicating which branch we&#39;re on. @n</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="394">
+          
+          
+          <code class="ruby">##</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="395">
+          
+          
+          <code class="ruby">## @details Return a  zero status code if this is  referring to a push</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="396">
+          
+          
+          <code class="ruby">## to the `master` branch.</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="397">
+          
+          
+          <code class="ruby">##</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="398">
+          
+          
+          <code class="ruby">## @par Example</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="399">
+          
+          
+          <code class="ruby">## `# Below will fail on -opipefail, -eE etc.`</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="400">
+          
+          
+          <code class="ruby">## `$ is_travis_master_push &amp;&amp; dockerhub_push_image madworx/qemu` @n</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="401">
+          
+          
+          <code class="ruby">##</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="402">
+          
+          
+          <code class="ruby">## `# Below is a work-around for above behaviour.`</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="403">
+          
+          
+          <code class="ruby">## `$ ! is_travis_master_push &amp;&amp; true || dockerhub_push_image madworx/qemu` @n</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="404">
+          
+          
+          <code class="ruby">##</code>
+        </li>
+      
+        <li class="covered" data-hits="5" data-linenumber="405">
           <span class="hits">5</span>
           
           <code class="ruby">is_travis_master_push() {</code>
         </li>
       
-        <li class="covered" data-hits="10" data-linenumber="390">
+        <li class="covered" data-hits="10" data-linenumber="406">
           <span class="hits">10</span>
           
           <code class="ruby">    is_travis_branch_push master</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="391">
+        <li class="never" data-hits="" data-linenumber="407">
           
           
           <code class="ruby">}</code>
