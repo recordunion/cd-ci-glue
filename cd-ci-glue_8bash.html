@@ -102,7 +102,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a8a504f91b67c21070633c30965a6398f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push image to Docker Hub.  <a href="#a8a504f91b67c21070633c30965a6398f">More...</a><br/></td></tr>
 <tr class="separator:a8a504f91b67c21070633c30965a6398f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c5df6586f9a2224c0f69d3e24480699"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cd-ci-glue_8bash.html#a8c5df6586f9a2224c0f69d3e24480699">dockerhub_set_description</a> (repository, filename)</td></tr>
-<tr class="memdesc:a8c5df6586f9a2224c0f69d3e24480699"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the image description on DockerHub.  <a href="#a8c5df6586f9a2224c0f69d3e24480699">More...</a><br/></td></tr>
+<tr class="memdesc:a8c5df6586f9a2224c0f69d3e24480699"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the image description on Docker Hub.  <a href="#a8c5df6586f9a2224c0f69d3e24480699">More...</a><br/></td></tr>
 <tr class="separator:a8c5df6586f9a2224c0f69d3e24480699"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49d4adba8cbc868de2f7e727fd6cb178"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cd-ci-glue_8bash.html#a49d4adba8cbc868de2f7e727fd6cb178">github_pages_prepare</a> (repository)</td></tr>
 <tr class="memdesc:a49d4adba8cbc868de2f7e727fd6cb178"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare a local directory for working with GitHub pages.  <a href="#a49d4adba8cbc868de2f7e727fd6cb178">More...</a><br/></td></tr>
@@ -125,6 +125,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a327598396a1b40c158f4c83c104dde9d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cd-ci-glue_8bash.html#a327598396a1b40c158f4c83c104dde9d">is_travis_master_push</a> ()</td></tr>
 <tr class="memdesc:a327598396a1b40c158f4c83c104dde9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if invoked from Travis CI due to push on <code>master</code> branch.  <a href="#a327598396a1b40c158f4c83c104dde9d">More...</a><br/></td></tr>
 <tr class="separator:a327598396a1b40c158f4c83c104dde9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0950b16c99604429c5ec2011caf05f8f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cd-ci-glue_8bash.html#a0950b16c99604429c5ec2011caf05f8f">is_travis_cron</a> ()</td></tr>
+<tr class="memdesc:a0950b16c99604429c5ec2011caf05f8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if invoked from Travis CI due to a cron event.  <a href="#a0950b16c99604429c5ec2011caf05f8f">More...</a><br/></td></tr>
+<tr class="separator:a0950b16c99604429c5ec2011caf05f8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Martin Kjellstrand <a href="#" onclick="location.href='mai'+'lto:'+'mar'+'ti'+'n.k'+'je'+'lls'+'tr'+'and'+'@m'+'adw'+'or'+'x.s'+'e'; return false;">marti<span style="display: none;">.nosp@m.</span>n.kj<span style="display: none;">.nosp@m.</span>ellst<span style="display: none;">.nosp@m.</span>rand<span style="display: none;">.nosp@m.</span>@madw<span style="display: none;">.nosp@m.</span>orx.<span style="display: none;">.nosp@m.</span>se</a> </dd></dl>
@@ -149,7 +152,7 @@ Functions</h2></td></tr>
  <b>AWS_SECRET_ACCESS_KEY</b> Specifies the secret key associated with the access key. <br/>
  <b>AWS_DEFAULT_REGION</b> Specifies the AWS Region to send the request to. <br/>
 </dd></dl>
-<p>Outputs the repository URL to <code>stdout</code>. (E.g. <code><a href="https://">https://</a>&lt;aws_account_id&gt;.dkr.ecr.&lt;region&gt;.amazonaws.com</code>)</p>
+<p>Outputs the full AWS ECR repository URL to <code>stdout</code>. (e.g. <code><a href="https://">https://</a>&lt;aws_account_id&gt;.dkr.ecr.&lt;region&gt;.amazonaws.com</code>)</p>
 <dl class="section user"><dt>Example</dt><dd><code>$ export REGISTRY_URL="$(awsecr_login)" || exit 1</code> <br/>
 <code>$ docker run "${REGISTRY_URL}/madworx/robotframework-kicadlibrary"</code> <br/>
 </dd></dl>
@@ -173,7 +176,7 @@ Functions</h2></td></tr>
 <p>Push a locally built docker image to Amazon ECR. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">image</td><td>Image identifier (e.g. <code>madworx/docshell:3.14</code>)</td></tr>
+    <tr><td class="paramname">image</td><td>Image identifier to push (e.g. <code>madworx/docshell:3.14</code>).</td></tr>
   </table>
   </dd>
 </dl>
@@ -181,7 +184,7 @@ Functions</h2></td></tr>
  <b>AWS_SECRET_ACCESS_KEY</b> Specifies the secret key associated with the access key. <br/>
  <b>AWS_DEFAULT_REGION</b> Specifies the AWS Region to send the request to. <br/>
 </dd></dl>
-<p>This function will as a side-effect tag the local image with the ECR remote registry URL prefix. Will output the complete path to the pushed image onto <code>stdout</code>. (E.g. 863710587213.dkr.ecr.eu-north-1.amazonaws.com/madworx/docker-netbsd:8.0)</p>
+<p>This function will as a side-effect tag the local image with the ECR remote registry URL prefix. Will output the complete path to the pushed image onto <code>stdout</code> (e.g. 863710587213.dkr.ecr.eu-north-1.amazonaws.com/madworx/docker-netbsd:8.0).</p>
 <dl class="section user"><dt>(You do not need to call awsecr_login() before calling this function.)</dt><dd></dd></dl>
 <dl class="section user"><dt>Example</dt><dd><code>$ docker build -t madworx/sample:1.0.1 .</code> <br/>
 <code>$ FULL_PATH="$(awsecr_push_image madworx/sample:1.0.1)" || exit 1</code> <br/>
@@ -206,7 +209,7 @@ Functions</h2></td></tr>
 <p>Push image to Docker Hub. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">image</td><td>Image to push. (e.g. <code>madworx/debian-archive:lenny</code>)</td></tr>
+    <tr><td class="paramname">image</td><td>Image identifier to push (e.g. <code>madworx/debian-archive:lenny</code>).</td></tr>
   </table>
   </dd>
 </dl>
@@ -246,7 +249,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the image description on DockerHub. </p>
+<p>Set the image description on Docker Hub. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">repository</td><td>Repository name; e.g. <code>madworx/docshell</code>. </td></tr>
@@ -307,7 +310,7 @@ Functions</h2></td></tr>
 <p>Prepare a local directory for working with GitHub pages. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">repository</td><td>Name of GitHub repository; e.g. <code>madworx/docshell</code>.</td></tr>
+    <tr><td class="paramname">repository</td><td>GitHub repository; e.g. <code>madworx/docshell</code>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -334,7 +337,7 @@ Functions</h2></td></tr>
 <p>Returns the latest tagged version on the given repository. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">repository</td><td>Github repository. (E.g. <code>madworx/docker-minix</code>)</td></tr>
+    <tr><td class="paramname">repository</td><td>GitHub repository; e.g. <code>madworx/docker-minix</code>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -388,7 +391,7 @@ Functions</h2></td></tr>
 <p>Prepare a local directory for working with GitHub Wiki repo. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">repository</td><td>Name of GitHub repository; e.g. <code>madworx/docshell</code>.</td></tr>
+    <tr><td class="paramname">repository</td><td>GitHub repository; e.g. <code>madworx/docshell</code>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -422,10 +425,32 @@ Functions</h2></td></tr>
 <dl class="section user"><dt>Environment variables</dt><dd><b>TRAVIS_EVENT_TYPE</b> Variable set by Travis CI during build-time, indicating event type. <br/>
  <b>TRAVIS_BRANCH</b> Variable set by Travis CI during build-time, indicating which branch we're on. <br/>
 </dd></dl>
-<p>Return a zero status code if this is refering to a push on the branch given as argument. If any of the required environment variables are missing, will emit error message on stderr, but containue anyway and assume that this is not a push event on the desired branch. Please note that this might break your script execution if running with <code>-o pipefail</code> and/or <code>set -eE</code>. A work-around for that fact is describe below in the example section.</p>
-<dl class="section user"><dt>Example</dt><dd><code># Below will fail on -opipefail, -eE etc.</code> <code>$ is_travis_branch_push devel &amp;&amp; dockerhub_push_image madworx/qemu:dev</code> <br/>
- <code># Below is a work-around for above behaviour.</code> <code>$ ! is_travis_branch_push devel &amp;&amp; true || dockerhub_push_image madworx/qemu:dev</code> <br/>
+<p>Return a zero status code if this is refering to a push on the branch given as argument. If any of the required environment variables are missing, will emit error message on stderr, but containue anyway and assume that this is not a push event on the desired branch. Please note that this might break your script execution if running with <code>-o pipefail</code> and/or <code>set -eE</code>. A work-around for that fact is described below in the example section.</p>
+<dl class="section user"><dt>Example</dt><dd><code># Below will fail on -opipefail, -eE etc.</code> <br/>
+<code>$ is_travis_branch_push devel &amp;&amp; dockerhub_push_image madworx/qemu:dev</code> <br/>
+ <code># Below is a work-around for above behaviour.</code> <br/>
+<code>$ ! is_travis_branch_push devel &amp;&amp; true || dockerhub_push_image madworx/qemu:dev</code> <br/>
 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0950b16c99604429c5ec2011caf05f8f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">is_travis_cron </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if invoked from Travis CI due to a cron event. </p>
+<dl class="section user"><dt>Environment variables</dt><dd><b>TRAVIS_EVENT_TYPE</b> Variable set by Travis CI during build-time, indicating event type. <br/>
+</dd></dl>
+<p>Return a zero status code if this is triggerd by Travis cron. </p>
 
 </div>
 </div>
@@ -447,8 +472,10 @@ Functions</h2></td></tr>
  <b>TRAVIS_BRANCH</b> Variable set by Travis CI during build-time, indicating which branch we're on. <br/>
 </dd></dl>
 <p>Return a zero status code if this is referring to a push to the <code>master</code> branch.</p>
-<dl class="section user"><dt>Example</dt><dd><code># Below will fail on -opipefail, -eE etc.</code> <code>$ is_travis_master_push &amp;&amp; dockerhub_push_image madworx/qemu</code> <br/>
- <code># Below is a work-around for above behaviour.</code> <code>$ ! is_travis_master_push &amp;&amp; true || dockerhub_push_image madworx/qemu</code> <br/>
+<dl class="section user"><dt>Example</dt><dd><code># Below will fail on -opipefail, -eE etc.</code> <br/>
+<code>$ is_travis_master_push &amp;&amp; dockerhub_push_image madworx/qemu</code> <br/>
+ <code># Below is a work-around for above behaviour.</code> <br/>
+<code>$ ! is_travis_master_push &amp;&amp; true || dockerhub_push_image madworx/qemu</code> <br/>
 </dd></dl>
 
 </div>
@@ -456,7 +483,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed May 29 2019 17:46:30 for cd-ci-glue by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 30 2019 14:32:57 for cd-ci-glue by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
