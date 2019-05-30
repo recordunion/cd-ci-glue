@@ -89,7 +89,7 @@ _github_doc_prepare() {
 ##  @b AWS_SECRET_ACCESS_KEY Secret key associated with the access key.@n
 ##  @b AWS_DEFAULT_REGION AWS Region to send the request to.@n
 ##
-## @details       Outputs       the      repository       URL       to
+## @details   Outputs   the   full   AWS   ECR   repository   URL   to
 ## `stdout`. (E.g. `https://<aws_account_id>.dkr.ecr.<region>.amazonaws.com`)
 ##
 ## @par Example
@@ -388,4 +388,26 @@ is_travis_branch_push() {
 ##
 is_travis_master_push() {
     is_travis_branch_push master
+}
+
+
+##
+## @fn is_travis_cron()
+##
+## @brief Check  if invoked  from Travis  CI due  to a cron event.
+##
+## @par Environment variables
+##  @b TRAVIS_EVENT_TYPE Variable set  by Travis CI during build-time,
+##  indicating event type. @n
+##
+## @details Return  a zero status code  if this is triggerd  by Travis
+## cron.
+##
+is_travis_cron() {
+    if [[ ! -v TRAVIS_EVENT_TYPE ]] ; then
+        echo "WARNING: Travis CI environment variable TRAVIS_EVENT_TYPE not set."    1>&2
+        echo "         Unable to identify if this commit is related to PR or merge." 1>&2
+        echo "" 1>&2
+    fi
+    [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]
 }
