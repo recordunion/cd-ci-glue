@@ -5,6 +5,11 @@
 ## @par URL
 ## https://github.com/madworx/cd-ci-glue @n
 ##
+## @defgroup TravisCI Travis CI
+## @defgroup GitHub GitHub.org
+## @defgroup AWS Amazon Web Services
+## @defgroup DockerHub Docker Hub
+
 
 # Private functions - do not invoke directly!
 
@@ -96,6 +101,7 @@ _github_doc_prepare() {
 ## `$ export REGISTRY_URL="$(awsecr_login)" || exit 1` @n
 ## `$ docker run "${REGISTRY_URL}/madworx/robotframework-kicadlibrary"` @n
 ##
+## @ingroup AWS
 awsecr_login() {
     _aws_ensure_environment || exit 1
     LOGIN_STR=$(aws ecr get-login) || exit 1
@@ -132,6 +138,7 @@ awsecr_login() {
 ## `$ FULL_PATH="$(awsecr_push_image madworx/sample:1.0.1)" || exit 1` @n
 ## `$ docker run "${FULL_PATH}"`
 ##
+## @ingroup AWS
 awsecr_push_image() {
     _aws_ensure_environment || exit 1
     REGISTRY_URL=$(awsecr_login) || exit 1
@@ -164,6 +171,7 @@ awsecr_push_image() {
 ## `$ docker tag madworx/debian-archive:lenny-04815d2 madworx/debian-archive:lenny` @n
 ## `$ dockerhub_push_image madworx/debian-archive:lenny` @n
 ##
+## @ingroup DockerHub
 dockerhub_push_image() {
     _dockerhub_ensure_environment || exit 1
     echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin && \
@@ -188,6 +196,7 @@ dockerhub_push_image() {
 ## `$ cd docshell` @n
 ## `$ dockerhub_set_description madworx/docshell README.md` @n
 ##
+## @ingroup DockerHub
 dockerhub_set_description() {
     _dockerhub_ensure_environment || exit 1
     : "${_DOCKERHUB_URL:=https://hub.docker.com/v2}"
@@ -241,6 +250,7 @@ dockerhub_set_description() {
 ## @details Checks out  the given repository's `gh-pages`  branch in a
 ## temporary directory. Outputs the temporary directory on `stdout`.
 ##
+## @ingroup GitHub
 github_pages_prepare() {
     _github_doc_prepare "${1}" "gh-pages" || exit 1
 }
@@ -257,6 +267,7 @@ github_pages_prepare() {
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
 ##
+## @ingroup GitHub
 github_doc_commit() {
     if [[ -z "$1" ]] ; then
         echo "FATAL: Argument 1 (temporary directory) not set." 1>&2
@@ -288,6 +299,7 @@ github_doc_commit() {
 ## but actually tags.   Therefore, we instead look at  the actual tags
 ## since this maps better to expected UX.
 ##
+## @ingroup GitHub
 github_releases_get_latest() {
     JSON=$(curl -fs "https://${GH_TOKEN:+$GH_TOKEN@}api.github.com/repos/$1/tags") || exit 1
     LATEST_TAG="$(jq -r '.[0].name' <<<"${JSON}")" || exit 1
@@ -310,6 +322,7 @@ github_releases_get_latest() {
 ## @par Environment variables
 ##  @b GH_TOKEN Valid GitHub personal access token. @n
 ##
+## @ingroup GitHub
 github_wiki_commit() {
     github_doc_commit "$1"
 }
@@ -328,6 +341,7 @@ github_wiki_commit() {
 ## @details Outputs  the temporary  directory name you're  supposed to
 ## put the Wiki files into to `stdout`.
 ##
+## @ingroup GitHub
 github_wiki_prepare() {
     TMPDR=$(_github_doc_prepare "${1}.wiki.git") || exit 1
     pushd "${TMPDR}" >/dev/null || exit 1
@@ -366,6 +380,7 @@ github_wiki_prepare() {
 ## `# Below is a work-around for above behaviour.` @n
 ## `$ ! is_travis_branch_push devel && true || dockerhub_push_image madworx/qemu:dev` @n
 ##
+## @ingroup TravisCI
 is_travis_branch_push() {   
     if [[ ! -v TRAVIS_EVENT_TYPE ]] ; then
         echo "WARNING: Travis CI environment variable TRAVIS_EVENT_TYPE not set."    1>&2
@@ -403,6 +418,7 @@ is_travis_branch_push() {
 ## `# Below is a work-around for above behaviour.` @n
 ## `$ ! is_travis_master_push && true || dockerhub_push_image madworx/qemu` @n
 ##
+## @ingroup TravisCI
 is_travis_master_push() {
     is_travis_branch_push master
 }
@@ -420,6 +436,7 @@ is_travis_master_push() {
 ## @details Return  a zero status code  if this is triggerd  by Travis
 ## cron.
 ##
+## @ingroup TravisCI
 is_travis_cron() {
     if [[ ! -v TRAVIS_EVENT_TYPE ]] ; then
         echo "WARNING: Travis CI environment variable TRAVIS_EVENT_TYPE not set."    1>&2
