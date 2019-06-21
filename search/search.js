@@ -7,10 +7,11 @@
 
 var indexSectionsWithContent =
 {
-  0: "acdgi",
+  0: "acdgit",
   1: "c",
   2: "adgi",
-  3: "d"
+  3: "adgt",
+  4: "d"
 };
 
 var indexSectionNames =
@@ -18,7 +19,8 @@ var indexSectionNames =
   0: "all",
   1: "files",
   2: "functions",
-  3: "pages"
+  3: "groups",
+  4: "pages"
 };
 
 function convertToId(search)
