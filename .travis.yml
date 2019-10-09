@@ -10,6 +10,7 @@ addons:
   apt:
     packages:
       - doxygen
+      - graphviz
 
 before_script:
   - pip install awscli
