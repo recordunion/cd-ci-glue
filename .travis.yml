@@ -1,25 +1,9 @@
 language: python
 
-cache:
-  - pip
-  - bundler
-
 sudo: false
 
-addons:
-  apt:
-    packages:
-      - doxygen
-      - graphviz
-
-before_script:
-  - pip install awscli
-  - gem install bashcov
-  - (git clone https://github.com/bats-core/bats-core.git && cd bats-core && ./install.sh ${HOME}/bats)
-
 script:
-  - PATH=${HOME}/bats/bin:$PATH make coverage
-  - make docs
+  - make docker-all
 
 after_success:
   - source <(curl 'https://raw.githubusercontent.com/madworx/cd-ci-glue/master/src/cd-ci-glue.bash')
@@ -28,4 +12,3 @@ after_success:
   - cp -a docs/html/*  "${GHDIR}/"
   - cp -a src/coverage -t "${GHDIR}/"
   - is_travis_master_push && github_doc_commit "${GHDIR}"
-
