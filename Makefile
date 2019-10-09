@@ -19,10 +19,9 @@ docs:
 #
 # Generate documentation, run linting and coverage tests using dind-container.
 #
-docker-all:
-	docker build -t test .
+docker-all: docker-build
 	docker kill dind || true
-	docker run --rm --name dind --privileged -v $$(pwd):/app -d test
+	docker run --rm --name dind --privileged -v $$(pwd):/app -d build-image
 	docker exec -w /app dind /bin/sh -c "\
 		while [ ! -S /var/run/docker.sock ] ; do \
 			sleep 0.5 ; \
@@ -40,4 +39,20 @@ docker-all:
 		-w /app --user=$$(id -u) \
 	  dind make lint docs coverage
 
-.PHONY: test docs lint coverage docker-all
+#
+# We cache the built builder-image in our own .docker_cache directory, instead
+# of relying on the Docker engines cache. The reason for this is two-fold; We
+# don't need/want to rebuild the builder-image needlessly, and also we wish to
+# support caching using TravisCI across multiple builds.
+#
+docker-build:
+	[ -d .docker_cache ] || mkdir .docker_cache
+	DIMAGE=.docker_cache/$$(sha256sum Dockerfile | awk '{print $$1}') ; \
+	  if [ -f "$${DIMAGE}" ] ; then \
+		docker load < "$${DIMAGE}" ; \
+	  else \
+		docker build -t build-image . ; \
+		docker save build-image > "$${DIMAGE}" ; \
+	  fi
+
+.PHONY: lint test coverage docs docker-all docker-build

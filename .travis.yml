@@ -1,5 +1,12 @@
 language: python
 
+services:
+  - docker
+
+cache:
+  directories:
+    - .docker_cache
+
 sudo: false
 
 script:

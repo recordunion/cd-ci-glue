@@ -1,4 +1,5 @@
 *~
+.docker_cache
 doxygen-bash.sed
 docs/
 coverage/
