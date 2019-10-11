@@ -165,6 +165,30 @@ artifactory_npm_setup() {
 
 
 ##
+## @fn artifactory_upload()
+##
+## @brief Upload artifact(s) to specified Artifactory repository.
+##
+## @param repo   Name of npm repository in Artifactory installation (e.g. `npm-proxy`).
+## @param email  E-mail address to put into .npmrc (e.g. `bob@builder.se`)
+##
+## @par Environment variables
+##  @b ARTIFACTORY_URL Specifies the URL to your JFrog Artifactory installation. @n
+##  @b ARTIFACTORY_NAME Specifies the username to connect using. @n
+##  @b ARTIFACTORY_PASSWORD Specifies the password/apikey to connect using. @n
+##
+## @par Example
+## `$ artifactory_npm_setup npm-proxy builderbob@mycompany.se` @n
+##
+## @ingroup Artifactory
+artifactory_upload() {
+    artifactory_setup || exit 1
+    JFROG_CLI=$(_artifactory_ensure_environment) || exit 1
+    ${JFROG_CLI} rt u "$@"
+}
+
+
+##
 ## @fn awsecr_login()
 ##
 ## @brief Login to Amazon Elastic Container Registry. (ECR)
