@@ -137,6 +137,31 @@ artifactory_setup() {
     return
 }
 
+##
+## @fn artifactory_npm_setup()
+##
+## @brief Create .npmrc file configured to use the named artifactory repo.
+##
+## @param repo   Name of npm repository in Artifactory installation (e.g. `npm-proxy`).
+## @param email  E-mail address to put into .npmrc (e.g. `bob@builder.se`)
+##
+## @par Environment variables
+##  @b ARTIFACTORY_URL Specifies the URL to your JFrog Artifactory installation. @n
+##  @b ARTIFACTORY_NAME Specifies the username to connect using. @n
+##  @b ARTIFACTORY_PASSWORD Specifies the password/apikey to connect using. @n
+##
+## @par Example
+## `$ artifactory_npm_setup npm-proxy builderbob@mycompany.se` @n
+##
+## @ingroup Artifactory
+artifactory_npm_setup() {
+    _artifactory_ensure_environment || exit 1
+    npm config set registry https://recordunion.jfrog.io/recordunion/api/npm/npm-proxy/ || exit 1
+    echo "_auth = $(echo -en "$ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD" | base64)" >> ~/.npmrc
+    echo "email = $2" >> ~/.npmrc
+    echo "always-auth = true" >> ~/.npmrc
+}
+
 
 ##
 ## @fn awsecr_login()
