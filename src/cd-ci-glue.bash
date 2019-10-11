@@ -155,8 +155,9 @@ artifactory_setup() {
 ##
 ## @ingroup Artifactory
 artifactory_npm_setup() {
-    _artifactory_ensure_environment || exit 1
-    npm config set registry ${ARTIFACTORY_URL}/api/npm/$1/ || exit 1
+    JFROG_CLI=$(_artifactory_ensure_environment) || exit 1
+    # Fixme: Need to handle of artifactory_url ends with / or not.
+    npm config set registry ${ARTIFACTORY_URL}api/npm/$1/ || exit 1
     echo "_auth = $(echo -en "$ARTIFACTORY_USER:$ARTIFACTORY_PASSWORD" | base64)" >> ~/.npmrc
     echo "email = $2" >> ~/.npmrc
     echo "always-auth = true" >> ~/.npmrc
