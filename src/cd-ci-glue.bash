@@ -213,6 +213,33 @@ artifactory_download() {
 
 
 ##
+## @fn artifactory_pypi_setup()
+##
+## @brief Create pip.conf file configured to use the named artifactory repo for PyPI.
+##
+## @param repo   Name of PyPI repository in Artifactory installation (e.g. `pypi-proxy`).
+##
+## @par Environment variables
+##  @b ARTIFACTORY_URL Specifies the URL to your JFrog Artifactory installation. @n
+##  @b ARTIFACTORY_NAME Specifies the username to connect using. @n
+##  @b ARTIFACTORY_PASSWORD Specifies the password/apikey to connect using. @n
+##
+## @par Example
+## `$ artifactory_pypi_setup pypi-proxy` @n
+##
+## @ingroup Artifactory
+artifactory_pypi_setup() {
+    [ -d "${HOME}/.config" ] || mkdir "${HOME}/.config"
+    [ -d "${HOME}/.config/pip" ] || mkdir "${HOME}/.config/pip"
+    cat >> "${HOME}/.config/pip/pip.conf" <<EOT
+
+[global]
+index-url = ${ARTIFACTORY_URL/:\/\//://${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD}@}api/pypy/${1}/simple
+EOT
+}
+
+
+##
 ## @fn awsecr_login()
 ##
 ## @brief Login to Amazon Elastic Container Registry. (ECR)
