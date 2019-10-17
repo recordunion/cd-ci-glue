@@ -234,7 +234,7 @@ artifactory_pypi_setup() {
     cat >> "${HOME}/.config/pip/pip.conf" <<EOT
 
 [global]
-index-url = ${ARTIFACTORY_URL/:\/\//://${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD}@}api/pypy/${1}/simple
+index-url = ${ARTIFACTORY_URL/:\/\//://${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD}@}api/pypi/${1}/simple
 EOT
 }
 
