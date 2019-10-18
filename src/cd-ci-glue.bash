@@ -224,6 +224,9 @@ artifactory_download() {
 ##  @b ARTIFACTORY_NAME Specifies the username to connect using. @n
 ##  @b ARTIFACTORY_PASSWORD Specifies the password/apikey to connect using. @n
 ##
+## @details   Outputs   the   repository URL (including credentials) to
+## `stdout`. (e.g. `https://USER:PASS@yourcompany.jfrog.io/..../`)
+##
 ## @par Example
 ## `$ artifactory_pypi_setup pypi-proxy` @n
 ##
@@ -231,11 +234,12 @@ artifactory_download() {
 artifactory_pypi_setup() {
     [ -d "${HOME}/.config" ] || mkdir "${HOME}/.config"
     [ -d "${HOME}/.config/pip" ] || mkdir "${HOME}/.config/pip"
+    INDEX_URL="${ARTIFACTORY_URL/:\/\//://${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD}@}api/pypi/${1}/simple"
     cat >> "${HOME}/.config/pip/pip.conf" <<EOT
-
 [global]
-index-url = ${ARTIFACTORY_URL/:\/\//://${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD}@}api/pypi/${1}/simple
+index-url = ${INDEX_URL}
 EOT
+    echo "${INDEX_URL}"
 }
 
 
