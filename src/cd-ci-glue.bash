@@ -163,6 +163,9 @@ artifactory_npm_setup() {
     echo "always-auth = true" >> ~/.npmrc
 }
 
+# To be implemented @callum
+#artifactory_docker_login() {}
+#artifactory_docker_push() {}
 
 ##
 ## @fn artifactory_upload()
@@ -605,3 +608,4 @@ is_travis_cron() {
     fi
     [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]
 }
+
