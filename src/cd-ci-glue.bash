@@ -86,14 +86,14 @@ _dockerhub_ensure_environment() {
 # Argument: $1 = repository name; e.g. `madworx/docshell`.
 # Argument: $2 = branch name (optional)
 #
-_github_doc_prepare() {    
+_github_doc_prepare() {
     if [[ ! -v GH_TOKEN ]] ; then
         echo "FATAL: GitHub token environment variable GH_TOKEN not set." 1>&2
         echo "       Aborting." 1>&2
         echo "" 1>&2
         exit 1
     fi
-    
+
     if [[ -z "$1" ]] ; then
         echo "FATAL: Argument 1 (repository name, e.g. madworx/docshell) not set." 1>&2
         echo "       Aborting." 1>&2
@@ -102,7 +102,7 @@ _github_doc_prepare() {
     fi
 
     REPO="https://${GH_TOKEN}@github.com/$1"
-    
+
     TMPDR="$(mktemp -d)"
     git clone -q "${REPO}" "${TMPDR}" || exit 1
     pushd "${TMPDR}" >/dev/null || exit 1
@@ -137,6 +137,7 @@ artifactory_setup() {
     return
 }
 
+
 ##
 ## @fn artifactory_npm_setup()
 ##
@@ -163,9 +164,40 @@ artifactory_npm_setup() {
     echo "always-auth = true" >> ~/.npmrc
 }
 
-# To be implemented @callum
-#artifactory_docker_login() {}
-#artifactory_docker_push() {}
+
+##
+## @fn artifactory_docker_login()
+##
+## @brief login to docker artifactory repository
+##
+## @par Environment variables
+##  @b DOCKER_REPO Specifies the URL to your JFrog Artifactory docker repository. @n
+##  @b ARTIFACTORY_USER Specifies the username to connect using. @n
+##  @b ARTIFACTORY_PASSWORD Specifies the password/apikey to connect using. @n
+##
+## @ingroup Artifactory
+artifactory_docker_login() {
+    echo "${ARTIFACTORY_PASSWORD}" | docker login --password-stdin -u "${ARTIFACTORY_USER}" "${DOCKER_REPO}"
+}
+
+
+##
+## @fn artifactory_docker_push()
+##
+## @brief push container to docker artifactory repository
+##
+## @param image_name Name of Docker image to push to artifactory
+##
+## @par Environment variables
+##  @b DOCKER_REPO Specifies the URL to your JFrog Artifactory docker repository. @n
+##  @b SHORT_GIT_HASH Specifies the username to connect using. @n
+##
+## @ingroup Artifactory
+artifactory_docker_push() {
+  docker tag "${1}" "${DOCKER_REPO}"/"${1}":"${SHORT_GIT_HASH}"
+  docker push "${DOCKER_REPO}"/"${1}":"${SHORT_GIT_HASH}"
+}
+
 
 ##
 ## @fn artifactory_upload()
@@ -544,7 +576,7 @@ github_wiki_prepare() {
 ## `$ ! is_travis_branch_push devel && true || dockerhub_push_image madworx/qemu:dev` @n
 ##
 ## @ingroup TravisCI
-is_travis_branch_push() {   
+is_travis_branch_push() {
     if [[ ! -v TRAVIS_EVENT_TYPE ]] ; then
         echo "WARNING: Travis CI environment variable TRAVIS_EVENT_TYPE not set."    1>&2
         echo "         Unable to identify if this commit is related to PR or merge." 1>&2
@@ -608,4 +640,3 @@ is_travis_cron() {
     fi
     [[ "${TRAVIS_EVENT_TYPE}" == "cron" ]]
 }
-
