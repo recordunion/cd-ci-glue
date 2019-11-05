@@ -190,12 +190,11 @@ artifactory_docker_login() {
 ##
 ## @par Environment variables
 ##  @b DOCKER_REPO Specifies the URL to your JFrog Artifactory docker repository. @n
-##  @b SHORT_GIT_HASH Specifies the username to connect using. @n
 ##
 ## @ingroup Artifactory
 artifactory_docker_push() {
-  docker tag "${1}" "${DOCKER_REPO}"/"${1}":"${SHORT_GIT_HASH}"
-  docker push "${DOCKER_REPO}"/"${1}":"${SHORT_GIT_HASH}"
+  docker tag "${1}" "${DOCKER_REPO}"/"${1}"
+  docker push "${DOCKER_REPO}"/"${1}"
 }
 
 
