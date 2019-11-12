@@ -203,8 +203,8 @@ artifactory_docker_push() {
 ##
 ## @brief Upload artifact(s) to specified Artifactory repository.
 ##
-## @param repo   Name of npm repository in Artifactory installation (e.g. `npm-proxy`).
-## @param email  E-mail address to put into .npmrc (e.g. `bob@builder.se`)
+## @param path    File/directory to upload to Artifactory (e.g. `dist/`).
+## @param remote  Reference where in Artifactory to store the artifacts (e.g. `test/proj/`)
 ##
 ## @par Environment variables
 ##  @b ARTIFACTORY_URL Specifies the URL to your JFrog Artifactory installation. @n
@@ -212,7 +212,7 @@ artifactory_docker_push() {
 ##  @b ARTIFACTORY_PASSWORD Specifies the password/apikey to connect using. @n
 ##
 ## @par Example
-## `$ artifactory_upload artifact.tar.gz testrepo/myproject/` @n
+## `$ artifactory_upload artifact.tar.gz "test/$CIRCLE_PROJECT_REPONAME/"` @n
 ##
 ## @ingroup Artifactory
 artifactory_upload() {
@@ -225,10 +225,9 @@ artifactory_upload() {
 ##
 ## @fn artifactory_download()
 ##
-## @brief Upload artifact(s) to specified Artifactory repository.
+## @brief Download artifact(s) from specified Artifactory repository.
 ##
-## @param repo   Name of npm repository in Artifactory installation (e.g. `npm-proxy`).
-## @param email  E-mail address to put into .npmrc (e.g. `bob@builder.se`)
+## @param artifact  Artifact to download (e.g. `repo/proj/artifact.tar.gz`).
 ##
 ## @par Environment variables
 ##  @b ARTIFACTORY_URL Specifies the URL to your JFrog Artifactory installation. @n
@@ -236,7 +235,7 @@ artifactory_upload() {
 ##  @b ARTIFACTORY_PASSWORD Specifies the password/apikey to connect using. @n
 ##
 ## @par Example
-## `$ artifactory_upload artifact.tar.gz testrepo/myproject/` @n
+## `$ artifactory_download "test/$CIRCLE_PROJECT_REPONAME/artifact.tar.gz"` @n
 ##
 ## @ingroup Artifactory
 artifactory_download() {
