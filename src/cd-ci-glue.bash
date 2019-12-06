@@ -280,6 +280,31 @@ EOT
 
 
 ##
+## @fn artifactory_pypi_upload_wheel()
+##
+## @brief Create pip.conf file configured to use the named artifactory repo for PyPI.
+##
+## @param expression Expression matching wheels to upload. Remember to quote. ("*.whl")
+## @param repo   Name of PyPI repository in Artifactory installation (e.g. `pypi-proxy-alpine`).
+##
+## @par Environment variables
+##  @b ARTIFACTORY_URL Specifies the URL to your JFrog Artifactory installation. @n
+##  @b ARTIFACTORY_NAME Specifies the username to connect using. @n
+##  @b ARTIFACTORY_PASSWORD Specifies the password/apikey to connect using. @n
+##
+## @details   Outputs diagnostic messages to stdout and possibly stderr.
+##
+## @par Example
+## `$ artifactory_pypi_upload_wheel pypi-proxy-alpine "*.whl"` @n
+##
+## @ingroup Artifactory
+artifactory_pypi_upload_wheel() {
+    JFROG_CLI=$(_artifactory_ensure_environment) || exit 1
+    ${JFROG_CLI} rt u "$2" "$1"
+}
+
+
+##
 ## @fn awsecr_login()
 ##
 ## @brief Login to Amazon Elastic Container Registry. (ECR)
